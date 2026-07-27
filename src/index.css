@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 180 100% 95%;
+    --card: 0 0% 4%;
+    --card-foreground: 180 100% 95%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 180 100% 95%;
+    --primary: 185 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 270 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 180 20% 65%;
+    --accent: 185 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 185 50% 15%;
+    --input: 185 30% 12%;
+    --ring: 185 100% 50%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(0, 245, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(191, 0, 255, 0.05) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00f5ff, #bf00ff);
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-black/60 backdrop-blur-xl border border-cyan-500/20;
+  }
+
+  .neon-text {
+    text-shadow: 0 0 8px currentColor, 0 0 20px currentColor;
+  }
+
+  .neon-border {
+    box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.3), 0 0 15px rgba(0, 245, 255, 0.15);
+  }
+
+  .card-glow {
+    @apply relative overflow-hidden rounded-xl border border-cyan-500/20 bg-zinc-950/80;
+  }
+  .card-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.05), transparent 40%, rgba(191, 0, 255, 0.05));
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400;
+  }
+}
