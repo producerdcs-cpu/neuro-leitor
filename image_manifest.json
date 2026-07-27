@@ -1,22 +1,22 @@
 {
-  "generated": "2026-07-26",
+  "generated": "2026-07-27",
   "images": [
     {
       "id": "hero-neural",
-      "description": "Rede neural bioneural com nós brilhantes em cyan e purple",
-      "path": "/assets/hero-neural.svg",
-      "type": "svg"
+      "description": "Rede neural bioneural — capa e hero do dashboard",
+      "path": "/hero-neural.webp",
+      "type": "webp"
+    },
+    {
+      "id": "readme-cover",
+      "description": "Capa do README",
+      "path": "/readme-cover.webp",
+      "type": "webp"
     },
     {
       "id": "logo",
-      "description": "Logo Neuro Leitor — cérebro estilizado com circuito",
-      "path": "/assets/logo.svg",
-      "type": "svg"
-    },
-    {
-      "id": "architecture",
-      "description": "Diagrama de arquitetura do sistema multimodal",
-      "path": "/assets/architecture.svg",
+      "description": "Favicon",
+      "path": "/favicon.svg",
       "type": "svg"
     }
   ]

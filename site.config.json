@@ -1,7 +1,7 @@
 {
-  "name": "Neuro Leitor",
-  "title": "Neuro Leitor — Leitor Multimodal Bioneural",
-  "description": "Plataforma avançada de leitura multimodal com motor bioneural, reconhecimento óptico e correção inteligente de erros.",
+  "name": "NeuroLeitor",
+  "title": "NeuroLeitor — BioData Reader v0.3",
+  "description": "Plataforma de Inteligência Bioneural: leitura, análise, detecção e correção universal de dados multimodais.",
   "url": "https://github.com/producerdcs-cpu/neuro-leitor",
   "author": "Producer DCS",
   "theme": {
@@ -9,8 +9,9 @@
     "primary": "#00f5ff",
     "accent": "#bf00ff"
   },
-  "version": "1.0.0",
+  "version": "0.3.0",
   "features": [
+    "Painel Principal (métricas + hero neural)",
     "Leitor Multimodal (PDF, Imagem, Áudio, Texto)",
     "Reconhecimento e Correção de Erros OCR/IA",
     "Motor Bioneural (rede neural animada)",
