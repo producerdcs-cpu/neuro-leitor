@@ -1,14 +1,18 @@
 {
   "name": "neuro-leitor",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
-  "description": "NeuroLeitor — BioData Reader v0.3 · Plataforma de Inteligência Bioneural",
+  "description": "NeuroLeitor — BioData Reader v0.4 · Fase 2 Backend (OCR/ASR/Correção/Sessões)",
   "scripts": {
     "dev": "vite",
+    "dev:server": "npm run dev --prefix server",
+    "dev:all": "echo 'Rode: npm run dev:server  e  npm run dev'",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "npm run start --prefix server",
+    "server:install": "npm install --prefix server"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.2",

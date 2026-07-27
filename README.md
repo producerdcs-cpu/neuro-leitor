@@ -1,78 +1,80 @@
 # 🧠 NeuroLeitor
 
-**BioData Reader v0.3 — Plataforma de Inteligência Bioneural**
+**BioData Reader v0.4 — Fase 2 Backend**
 
 ![NeuroLeitor](./public/hero-neural.webp)
 
-![version](https://img.shields.io/badge/version-0.3.0-cyan?style=flat-square)
-![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square)
-![Vite](https://img.shields.io/badge/Vite-6-646cff?style=flat-square)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?style=flat-square)
-![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square)
+![version](https://img.shields.io/badge/version-0.4.0-cyan?style=flat-square)
+![phase](https://img.shields.io/badge/phase-2%20backend-purple?style=flat-square)
 
 ---
 
-## Visão Geral
+## Fase 2 — Backend (pronto)
 
-O **NeuroLeitor** é uma plataforma de leitura multimodal com motor bioneural:
+| Módulo | Endpoint | Providers |
+|--------|----------|-----------|
+| **OCR** | `POST /api/process` | local-mock · tesseract.js · OpenAI vision |
+| **ASR** | `POST /api/process` | local-mock · OpenAI Whisper |
+| **Correção** | `POST /api/correct` | local-rules · OpenAI |
+| **Sessões** | `/api/sessions` | JSON em `server/store/sessions/` |
+| **Health** | `GET /api/health` | status + providers |
 
-- **Painel Principal** — métricas em tempo real, status do sistema e hero neural
-- **Leitor Multimodal** — upload de PDF, imagem, áudio e texto
-- **Reconhecimento & Correção** — erros OCR, ortográficos, gramaticais e contextuais
-- **Motor Bioneural** — rede neural animada (Canvas 2D) + métricas
-- **Arquitetura & Roadmap** — pipeline, stack e fases de evolução
+Frontend usa a API quando `:3001` está online; senão usa mock.
 
-Tema **OLED Dark** com acentos neon cyan / purple / orange.
+---
 
-### Protótipo
+## Como rodar
 
-🔗 [Ver protótipo no Atoms](https://atoms.dev/pt-BR/share/d71e4f814ed043f5a305e90285d79a99/v4)
+### Backend
+
+```bash
+cd server
+npm install
+npm run dev
+# → http://localhost:3001/api/health
+```
+
+Opcional cloud:
+
+```bash
+cp .env.example .env
+# OPENAI_API_KEY=sk-...
+# OCR_PROVIDER=openai ASR_PROVIDER=openai CORRECTION_PROVIDER=openai
+```
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+---
+
+## API
+
+```bash
+curl http://localhost:3001/api/health
+curl -F "file=@doc.png" http://localhost:3001/api/process
+curl -X POST http://localhost:3001/api/correct -H "Content-Type: application/json" \
+  -d '{"text":"reconehcimento multimod@l"}'
+```
 
 ---
 
 ## Estrutura
 
 ```
-public/
-├── favicon.svg
-└── hero-neural.webp          ← Capa README + hero do app
+server/
+├── index.js routes/api.js
+├── services/ ocr.js asr.js correction.js pipeline.js
+└── store/sessions.js
 
-src/
-├── pages/Index.tsx
-└── components/
-    ├── DashboardPanel.tsx
-    ├── MultimodalReader.tsx
-    ├── RecognitionCorrection.tsx
-    ├── BioneuralEngine.tsx
-    └── ArchitecturePanel.tsx
+src/services/api.ts
+src/hooks/useApiHealth.ts
 ```
 
 ---
 
-## Como rodar
-
-```bash
-git clone https://github.com/producerdcs-cpu/neuro-leitor.git
-cd neuro-leitor
-npm install
-npm run dev
-```
-
-Abre em `http://localhost:5173`
-
----
-
-## Capa
-
-Arquivo: **`public/hero-neural.webp`**
-
-- README: `![NeuroLeitor](./public/hero-neural.webp)`
-- App (Dashboard): `src="/hero-neural.webp"`
-
----
-
-## Licença
-
-MIT © 2026 Producer DCS
-
-**GitHub:** [producerdcs-cpu/neuro-leitor](https://github.com/producerdcs-cpu/neuro-leitor)
+MIT © 2026 Producer DCS · [producerdcs-cpu/neuro-leitor](https://github.com/producerdcs-cpu/neuro-leitor)
