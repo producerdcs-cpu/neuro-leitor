@@ -23,8 +23,8 @@ Tema **OLED Dark** com acentos neon cyan/purple, tipografia Orbitron + Inter + J
 
 ### Protótipo
 
-🔗 [Ver protótipo no Atoms](https://atoms.dev/pt-BR/share/d71e4f814ed043f5a305e90285d79a99/v4)
-
+🔗 [Ver protótipo no Atoms]([https://atoms.dev/pt-BR/share/d71e4f814e LL LL
+](https://1365815-8f39429f188a40b7a1e489fc7d8cc638-3-original.app.atoms.dev/)
 ---
 
 ## Estrutura do Projeto
