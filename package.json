@@ -1,9 +1,9 @@
 {
   "name": "neuro-leitor",
   "private": true,
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
-  "description": "NeuroLeitor v0.5 — Fase 3: Vision, TTS, Docs & Apostila",
+  "description": "NeuroLeitor v0.6 — Fase 4: PWA, sessões, TTS Ouvir",
   "scripts": {
     "dev": "vite",
     "dev:server": "npm run dev --prefix server",
