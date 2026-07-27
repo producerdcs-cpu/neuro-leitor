@@ -2,7 +2,7 @@
 
 **BioData Reader v0.3 — Plataforma de Inteligência Bioneural**
 
-![NeuroLeitor](./public/hero-neural.webp)
+![NeuroLeitor](./public/hero-neural.svg)
 
 ![version](https://img.shields.io/badge/version-0.3.0-cyan?style=flat-square)
 ![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square)
@@ -50,8 +50,9 @@ src/
 
 public/
 ├── favicon.svg
-├── hero-neural.webp              ← Capa / hero
-└── readme-cover.webp
+├── hero-neural.svg               ← Capa README (SVG)
+├── hero-neural.jpg               ← Hero app (JPEG — adicione via upload)
+└── hero-neural.webp
 ```
 
 ---
@@ -69,6 +70,25 @@ Abre em `http://localhost:5173`
 
 ---
 
+## Capa / hero-neural.jpg
+
+Arquivo de capa do app:
+
+- Caminho: `public/hero-neural.jpg`
+- README usa: `public/hero-neural.svg` (já no repo)
+- Para a foto real (JPEG do mockup), envie em **public/hero-neural.jpg**:
+
+```bash
+# Após clonar, copie a imagem e faça:
+git add public/hero-neural.jpg
+git commit -m "feat: add hero-neural.jpg cover"
+git push
+```
+
+Ou no GitHub: **Add file → Upload files** → pasta `public/` → nome `hero-neural.jpg`.
+
+---
+
 ## Stack
 
 | Camada | Tecnologia |
@@ -77,32 +97,6 @@ Abre em `http://localhost:5173`
 | Build | Vite 6 |
 | Estilos | Tailwind CSS 3 + Shadcn/ui |
 | Animações | Framer Motion |
-| Ícones | Lucide React |
-
----
-
-## Features (v0.3)
-
-- [x] Painel Principal com hero neural e métricas
-- [x] 5 abas de navegação
-- [x] Upload drag-and-drop multimodal
-- [x] Pipeline simulado OCR / ASR / Vision / NLP
-- [x] Correção de erros
-- [x] Motor bioneural animado
-- [x] Status do sistema (Transformer, SNN, GNN)
-- [x] Arquitetura + roadmap
-- [x] Tema OLED dark neon
-
----
-
-## Roadmap
-
-| Fase | Status |
-|------|--------|
-| **1 — MVP** | ✅ |
-| **2 — Backend** OCR, Whisper, LLM | 🔄 |
-| **3 — Avançado** Vision, TTS, WASM | 📋 |
-| **4 — Escala** Fine-tuning, PWA | 📋 |
 
 ---
 
