@@ -2,7 +2,7 @@
 
 **BioData Reader v0.3 — Plataforma de Inteligência Bioneural**
 
-![NeuroLeitor](./public/hero-neural.svg)
+![NeuroLeitor](./public/hero-neural.webp)
 
 ![version](https://img.shields.io/badge/version-0.3.0-cyan?style=flat-square)
 ![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square)
@@ -30,29 +30,21 @@ Tema **OLED Dark** com acentos neon cyan / purple / orange.
 
 ---
 
-## Estrutura do Projeto
+## Estrutura
 
 ```
-src/
-├── pages/
-│   └── Index.tsx                 ← Dashboard + navegação por abas
-├── components/
-│   ├── DashboardPanel.tsx        ← Painel Principal (hero + métricas)
-│   ├── MultimodalReader.tsx      ← Leitor Multimodal
-│   ├── RecognitionCorrection.tsx ← Reconhecimento e Correção
-│   ├── BioneuralEngine.tsx       ← Motor Bioneural animado
-│   ├── ArchitecturePanel.tsx     ← Arquitetura + Roadmap
-│   └── ui/                       ← Shadcn/ui
-├── lib/utils.ts
-├── index.css
-├── App.tsx
-└── main.tsx
-
 public/
 ├── favicon.svg
-├── hero-neural.svg               ← Capa README (SVG)
-├── hero-neural.jpg               ← Hero app (JPEG — adicione via upload)
-└── hero-neural.webp
+└── hero-neural.webp          ← Capa README + hero do app
+
+src/
+├── pages/Index.tsx
+└── components/
+    ├── DashboardPanel.tsx
+    ├── MultimodalReader.tsx
+    ├── RecognitionCorrection.tsx
+    ├── BioneuralEngine.tsx
+    └── ArchitecturePanel.tsx
 ```
 
 ---
@@ -70,33 +62,12 @@ Abre em `http://localhost:5173`
 
 ---
 
-## Capa / hero-neural.jpg
+## Capa
 
-Arquivo de capa do app:
+Arquivo: **`public/hero-neural.webp`**
 
-- Caminho: `public/hero-neural.jpg`
-- README usa: `public/hero-neural.svg` (já no repo)
-- Para a foto real (JPEG do mockup), envie em **public/hero-neural.jpg**:
-
-```bash
-# Após clonar, copie a imagem e faça:
-git add public/hero-neural.jpg
-git commit -m "feat: add hero-neural.jpg cover"
-git push
-```
-
-Ou no GitHub: **Add file → Upload files** → pasta `public/` → nome `hero-neural.jpg`.
-
----
-
-## Stack
-
-| Camada | Tecnologia |
-|--------|------------|
-| UI | React 18 + TypeScript |
-| Build | Vite 6 |
-| Estilos | Tailwind CSS 3 + Shadcn/ui |
-| Animações | Framer Motion |
+- README: `![NeuroLeitor](./public/hero-neural.webp)`
+- App (Dashboard): `src="/hero-neural.webp"`
 
 ---
 
