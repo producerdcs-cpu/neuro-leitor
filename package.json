@@ -1,9 +1,9 @@
 {
   "name": "neuro-leitor",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.3.0",
   "type": "module",
-  "description": "Neuro Leitor — Leitor Multimodal com Motor Bioneural, Reconhecimento e Correção de Erros",
+  "description": "NeuroLeitor — BioData Reader v0.3 · Plataforma de Inteligência Bioneural",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
