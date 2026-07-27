@@ -1,0 +1,23 @@
+{
+  "generated": "2026-07-26",
+  "images": [
+    {
+      "id": "hero-neural",
+      "description": "Rede neural bioneural com nós brilhantes em cyan e purple",
+      "path": "/assets/hero-neural.svg",
+      "type": "svg"
+    },
+    {
+      "id": "logo",
+      "description": "Logo Neuro Leitor — cérebro estilizado com circuito",
+      "path": "/assets/logo.svg",
+      "type": "svg"
+    },
+    {
+      "id": "architecture",
+      "description": "Diagrama de arquitetura do sistema multimodal",
+      "path": "/assets/architecture.svg",
+      "type": "svg"
+    }
+  ]
+}
