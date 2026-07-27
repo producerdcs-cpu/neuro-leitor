@@ -6,16 +6,24 @@ import {
   ScanSearch,
   Network,
   Layers,
+  LayoutDashboard,
   Github,
   ExternalLink,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DashboardPanel from "@/components/DashboardPanel";
 import MultimodalReader from "@/components/MultimodalReader";
 import RecognitionCorrection from "@/components/RecognitionCorrection";
 import BioneuralEngine from "@/components/BioneuralEngine";
 import ArchitecturePanel from "@/components/ArchitecturePanel";
 
 const tabs = [
+  {
+    value: "dashboard",
+    label: "Painel Principal",
+    icon: LayoutDashboard,
+    component: DashboardPanel,
+  },
   {
     value: "reader",
     label: "Leitor Multimodal",
@@ -43,11 +51,10 @@ const tabs = [
 ];
 
 export default function Index() {
-  const [active, setActive] = useState("reader");
+  const [active, setActive] = useState("dashboard");
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-cyan-500/15 bg-black/80 backdrop-blur-xl">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -56,15 +63,19 @@ export default function Index() {
             </div>
             <div>
               <h1 className="text-lg font-bold font-display tracking-wider text-gradient">
-                NEURO LEITOR
+                NeuroLeitor
               </h1>
               <p className="text-[10px] text-zinc-500 -mt-0.5 tracking-widest uppercase">
-                Multimodal · Bioneural
+                BioData Reader v0.3
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-green-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+              Sistema Online
+            </div>
             <a
               href="https://github.com/producerdcs-cpu/neuro-leitor"
               target="_blank"
@@ -87,44 +98,14 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Hero strip */}
-      <div className="border-b border-cyan-500/10 bg-gradient-to-r from-cyan-950/30 via-transparent to-purple-950/30">
-        <div className="mx-auto max-w-6xl px-4 py-6">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-          >
-            <div>
-              <p className="text-sm text-zinc-300 max-w-xl leading-relaxed">
-                Plataforma de leitura multimodal com motor bioneural, reconhecimento
-                óptico inteligente e correção automática de erros. Processa PDF,
-                imagem, áudio e texto em um pipeline unificado.
-              </p>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {["OCR", "ASR", "Vision", "NLP", "TTS"].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-mono text-cyan-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Main content */}
       <main className="flex-1 mx-auto max-w-6xl w-full px-4 py-6">
         <Tabs value={active} onValueChange={setActive}>
-          <TabsList className="w-full sm:w-auto flex-wrap h-auto gap-1">
+          <TabsList className="w-full sm:w-auto flex-wrap h-auto gap-1 mb-2">
             {tabs.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value} className="gap-1.5">
                 <tab.icon className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.label.split(" ")[0]}</span>
+                <span className="hidden md:inline">{tab.label}</span>
+                <span className="md:hidden">{tab.label.split(" ")[0]}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -144,12 +125,11 @@ export default function Index() {
         </Tabs>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-cyan-500/10 py-4">
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-600">
           <p>
-            © 2026 Neuro Leitor · Producer DCS ·{" "}
-            <span className="text-cyan-600">v1.0.0</span>
+            © 2026 NeuroLeitor · Producer DCS ·{" "}
+            <span className="text-cyan-600">v0.3.0</span>
           </p>
           <p className="font-mono">React · Vite · Tailwind · Framer Motion</p>
         </div>
