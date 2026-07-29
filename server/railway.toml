@@ -1,0 +1,9 @@
+# Quando o root do serviço no Railway for a pasta server/
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "node index.js"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"

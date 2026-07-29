@@ -1,73 +1,48 @@
 # ✅ Checklist Geral — NeuroLeitor BioData Reader v0.6.1
 
-> Gerado em 2026-07-28 · Ambiente sandbox + análise do repositório `producerdcs-cpu/neuro-leitor`
+> Atualizado 2026-07-28 · Deploy backend pronto (`docs/DEPLOY.md`)
 
-## 1. Estado atual (análise)
+## 1. Estado atual
 
 | Item | Status | Observação |
 |------|--------|------------|
-| **Frontend (UI + PWA)** | ✅ Operacional | React 18 + Vite 6 + Tailwind + Framer + Radix. Instalado como app web no celular (manifest + sw.js). |
-| **Fase 1 — MVP** | ✅ Concluído | Dashboard, abas, upload simulado, motor bioneural animado, correção mock. |
-| **Fase 2 — Backend** | 🟡 Em andamento / parcial | API Express em `server/` (OCR, ASR, correção, sessões). Providers: local-mock / tesseract / OpenAI / Whisper. Funciona localmente; **não está deployado em cloud** (por isso o app mobile usa fallback mock/offline). |
-| **Fase 3 — Avançado** | 📋 Planejado | Vision caption real, TTS multilíngue, offline WASM, extensão navegador. |
-| **Fase 4 — Escala** | 📋 Planejado (parcial PWA) | Fine-tuning, analytics, multi-user/auth, edge deploy. PWA já existe (manifest + service worker). |
-| **Vercel** | ✅ Site online | Frontend deployado. Plugin Vercel no editor é opcional. Painel Vercel = só gestão do projeto. |
-| **Redeploy necessário?** | Sim (frontend) | Após este push o Vercel deve rebuild automático. Backend precisa de deploy separado (Railway/Render/Fly ou Vercel serverless). |
+| **Frontend (UI + PWA)** | ✅ Operacional | React + Vite + PWA instalável no celular |
+| **Fase 1 — MVP** | ✅ Concluído | Dashboard, abas, motor bioneural, mocks |
+| **Fase 2 — Backend** | 🟡 Código pronto · deploy pendente | API local completa. Dockerfile + Railway docs prontos. Falta subir e ligar `VITE_API_URL` |
+| **Fase 3 / 4** | 📋 Planejado | Vision, TTS multi, offline, auth, edge |
+| **Vercel** | ✅ Frontend online | Redeploy automático no push |
 
-## 2. Checklist de verificação rápida (PWA mobile)
+## 2. Fechar Fase 2 (hoje ou amanhã)
 
-- [x] App instalado pelo navegador (Add to Home Screen)
-- [x] Manifest + ícones + theme_color pretos
-- [x] Service Worker presente (`public/sw.js`)
-- [ ] API backend online (health check verde no header)
-- [ ] Upload real de PDF/imagem/áudio processando via API
-- [ ] Persistência de sessões entre abas/recargas
-- [ ] TTS “Ouvir” funcionando (cliente já tem `src/lib/tts.ts`)
-- [ ] Correção ortográfica/semântica real (não só mock)
+Siga **[docs/DEPLOY.md](./docs/DEPLOY.md)** — ~10–15 min com Railway.
 
-## 3. Checklist Fase 2 (Backend) — o que falta para “completo de verdade”
+- [ ] Criar projeto no Railway (GitHub → root `server`)
+- [ ] Variáveis: `CORS_ORIGIN`, `OCR_PROVIDER=local`, etc.
+- [ ] Generate Domain → anotar URL da API
+- [ ] `curl …/api/health` → `ok: true`
+- [ ] No Vercel: `VITE_API_URL=https://sua-api…`
+- [ ] Redeploy frontend
+- [ ] No celular: header **API verde** + upload real
 
-- [x] Rotas `/api/health`, `/api/process`, `/api/correct`, `/api/sessions`
-- [x] Pipeline: ingest → OCR/ASR → correction → meta
-- [x] Sessões em memória/JSON local
-- [ ] Deploy do `server/` em produção (URL pública)
-- [ ] `VITE_API_URL` apontando para a URL de produção no frontend
-- [ ] Variáveis `OPENAI_API_KEY` / providers em produção (opcional)
-- [ ] CORS e rate-limit básicos
-- [ ] Persistência de sessões em DB (SQLite/Postgres) em vez de arquivo local
+## 3. Checklist PWA mobile
 
-## 4. Checklist Fase 3 / 4 (futuro)
+- [x] App instalado (Add to Home Screen)
+- [x] Manifest + service worker
+- [ ] API backend online (health verde)
+- [ ] Upload real via API
+- [ ] Sessões entre abas
+- [ ] TTS “Ouvir”
 
-**Fase 3**
-- [ ] Vision caption real (BLIP-2 / CLIP / OpenAI Vision)
-- [ ] TTS multilíngue (gTTS / Web Speech / cloud)
-- [ ] Offline (WASM Tesseract + modelos leves)
-- [ ] Extensão de navegador
+## 4. Fase 3 / 4 (futuro)
 
-**Fase 4**
-- [ ] Fine-tuning / embeddings + vector store
-- [ ] Dashboard analytics
-- [ ] Auth multi-usuário
-- [ ] Deploy edge completo (PWA + backend edge)
+**Fase 3:** Vision caption real · TTS multilíngue · offline WASM · extensão  
+**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge completo
 
-## 5. Ações deste push
+## 5. Fazer hoje ou amanhã?
 
-1. Alinhar status da tela **Arquitetura** com a realidade (Fase 2 parcial).
-2. Documentação técnica completa da tela Arquitetura (`docs/ARCHITECTURE.md`).
-3. README e `docsContent` sincronizados com v0.6.1.
-4. Preparar frontend para redeploy automático no Vercel.
-
-## 6. Como forçar redeploy do frontend
-
-```bash
-# Local (se tiver Vercel CLI)
-npx vercel --prod
-
-# Ou: push neste repositório → Vercel detecta e rebuilda automaticamente
-```
-
-Após o rebuild, reabra o PWA no celular (ou “limpar cache / reabrir”) para ver a UI atualizada.
+- **Hoje:** se tiver 10–15 min → Railway + `VITE_API_URL` → Fase 2 fechada.
+- **Amanhã:** também ok. Frontend e apostila já estão estáveis; nada quebra.
 
 ---
 
-**Resumo em uma frase:** o site e a apostila já operam; a Fase 2 tem backend funcional localmente; para fases 2–4 “completas de verdade” com API cloud + PWA full é preciso deploy do backend + um redeploy do frontend com a URL da API.
+**Resumo:** backend está *deploy-ready*. Um serviço Railway + uma env no Vercel e a Fase 2 fecha de verdade.

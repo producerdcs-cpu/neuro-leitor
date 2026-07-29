@@ -1,11 +1,14 @@
 {
   "name": "neuro-leitor-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node --watch index.js",
     "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "cors": "^2.8.5",
