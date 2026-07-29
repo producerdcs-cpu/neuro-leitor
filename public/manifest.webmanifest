@@ -1,12 +1,19 @@
 {
+  "id": "/",
   "name": "NeuroLeitor — BioData Reader",
   "short_name": "NeuroLeitor",
-  "description": "Plataforma de leitura multimodal com motor bioneural",
-  "start_url": "/",
+  "description": "Leitura multimodal com motor bioneural",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
   "background_color": "#000000",
-  "theme_color": "#06b6d4",
+  "theme_color": "#000000",
   "lang": "pt-BR",
-  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
   "categories": ["education", "productivity", "utilities"]
 }

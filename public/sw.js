@@ -1,17 +1,52 @@
-const CACHE = "neuro-leitor-v0.6";
-const ASSETS = ["/", "/index.html", "/favicon.svg", "/manifest.webmanifest"];
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+/* NeuroLeitor PWA SW — mobile optimized v0.6.1 */
+const CACHE = "neuro-leitor-v061";
+const PRECACHE = ["/", "/index.html", "/favicon.svg", "/manifest.webmanifest"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+  );
 });
-self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+    ).then(() => self.clients.claim())
+  );
 });
-self.addEventListener("fetch", (e) => {
-  const { request } = e;
+
+function sameOrigin(url) {
+  try { return new URL(url).origin === self.location.origin; } catch { return false; }
+}
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
   if (request.method !== "GET") return;
-  if (request.url.includes("/api/")) {
-    e.respondWith(fetch(request).catch(() => caches.match(request)));
+  if (!sameOrigin(request.url)) return;
+  const url = new URL(request.url);
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(request).catch(() => new Response("{}", { status: 503 })));
     return;
   }
-  e.respondWith(caches.match(request).then((cached) => cached || fetch(request).then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(request, copy)); return res; }).catch(() => cached)));
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put("/index.html", copy));
+        return res;
+      }).catch(() => caches.match("/index.html"))
+    );
+    return;
+  }
+  event.respondWith(
+    caches.open(CACHE).then(async (cache) => {
+      const cached = await cache.match(request);
+      const network = fetch(request).then((res) => {
+        if (res.ok) cache.put(request, res.clone());
+        return res;
+      }).catch(() => cached);
+      return cached || network;
+    })
+  );
 });
