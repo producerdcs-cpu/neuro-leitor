@@ -1,0 +1,150 @@
+# NeuroLeitor — CI simples e seguro
+# Roda em todo push e pull_request.
+# Deploy (Vercel / Railway) só na branch main e só se os Secrets existirem.
+
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # permite rodar manualmente no GitHub (botão "Run workflow")
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ─────────────────────────────────────────
+  # 1. Frontend: instalar + typecheck + build
+  # ─────────────────────────────────────────
+  frontend:
+    name: Frontend (build)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+        continue-on-error: true # ainda sem testes rígidos; não bloqueia
+
+      - name: Build PWA
+        run: npm run build
+        env:
+          # Build de CI não precisa da API real; placeholder seguro
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'http://localhost:3001' }}
+
+      - name: Upload dist (artefato)
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist
+          retention-days: 3
+
+  # ─────────────────────────────────────────
+  # 2. Backend: instalar + smoke test
+  # ─────────────────────────────────────────
+  backend:
+    name: Backend (smoke)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: server/package.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start API + health check
+        run: |
+          node index.js &
+          SERVER_PID=$!
+          sleep 2
+          curl -sf http://127.0.0.1:3001/api/health || (kill $SERVER_PID; exit 1)
+          kill $SERVER_PID || true
+        env:
+          PORT: 3001
+          HOST: 127.0.0.1
+          NODE_ENV: test
+          CORS_ORIGIN: http://localhost:5173
+          OCR_PROVIDER: local
+          ASR_PROVIDER: local
+          CORRECTION_PROVIDER: local
+
+  # ─────────────────────────────────────────
+  # 3. Deploy Frontend (Vercel) — só main + secret
+  # ─────────────────────────────────────────
+  deploy-frontend:
+    name: Deploy Frontend (Vercel)
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        # Só roda se VERCEL_TOKEN estiver configurado em Settings → Secrets
+        if: ${{ secrets.VERCEL_TOKEN != '' }}
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
+      - name: Skip (sem secrets)
+        if: ${{ secrets.VERCEL_TOKEN == '' }}
+        run: echo "⚠️ VERCEL_TOKEN não configurado — deploy frontend pulado. Configure em Settings → Secrets and variables → Actions."
+
+  # ─────────────────────────────────────────
+  # 4. Deploy Backend (Railway) — só main + secret
+  # ─────────────────────────────────────────
+  deploy-backend:
+    name: Deploy Backend (Railway)
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        if: ${{ secrets.RAILWAY_TOKEN != '' }}
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        if: ${{ secrets.RAILWAY_TOKEN != '' }}
+        run: |
+          railway up --service ${{ secrets.RAILWAY_SERVICE_ID || 'neuro-leitor-api' }} --detach || railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        working-directory: server
+
+      - name: Skip (sem secrets)
+        if: ${{ secrets.RAILWAY_TOKEN == '' }}
+        run: echo "⚠️ RAILWAY_TOKEN não configurado — deploy backend pulado. Configure em Settings → Secrets."

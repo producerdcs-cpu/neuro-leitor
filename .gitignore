@@ -19,7 +19,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Env
+# Env — nunca versionar segredos
 .env
 .env.*
 !.env.example
@@ -34,3 +34,9 @@ pnpm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# OS / misc
+.DS_Store
+Thumbs.db
+*.pem
+*.key
