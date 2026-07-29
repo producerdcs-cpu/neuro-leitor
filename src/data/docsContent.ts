@@ -19,8 +19,8 @@ export interface DocSection {
   table?: { headers: string[]; rows: string[][] };
 }
 
-export const DOC_VERSION = "1.0.0";
-export const DOC_UPDATED = "2026-07-27";
+export const DOC_VERSION = "1.1.0";
+export const DOC_UPDATED = "2026-07-28";
 
 export const sections: DocSection[] = [
   {
@@ -36,8 +36,8 @@ export const sections: DocSection[] = [
     bullets: [
       "Leitura inclusiva (dislexia, baixa visão, multilíngue)",
       "Fluxo único PDF → imagem → áudio → texto",
-      "Backend Fase 2 com OCR/ASR/correção e sessões",
-      "Fase 3: vision caption, TTS e bases offline",
+      "Backend Fase 2 com OCR/ASR/correção e sessões (local pronto; cloud em andamento)",
+      "PWA instalável no celular · Fase 3: vision caption, TTS e bases offline",
     ],
   },
   {
@@ -53,9 +53,9 @@ export const sections: DocSection[] = [
       rows: [
         ["Protótipo Atoms", "v0.x", "UI dark OLED, abas e mock multimodal"],
         ["Fase 1 — MVP", "v0.3", "Dashboard, leitor, correção, motor bioneural"],
-        ["Fase 2 — Backend", "v0.4", "API Express: OCR, ASR, correção, sessões"],
-        ["Fase 3 — Avançado", "v0.5", "Vision caption, TTS, docs/apostila"],
-        ["Fase 4 — Escala", "planejado", "Fine-tuning, multi-usuário, PWA"],
+        ["Fase 2 — Backend", "v0.4–0.6", "API Express: OCR, ASR, correção, sessões + PWA"],
+        ["Fase 3 — Avançado", "planejado", "Vision caption, TTS multilíngue, offline"],
+        ["Fase 4 — Escala", "planejado", "Fine-tuning, multi-usuário, edge"],
       ],
     },
   },
@@ -63,14 +63,16 @@ export const sections: DocSection[] = [
     id: "phases",
     title: "3. Fases do projeto",
     icon: "Layers",
-    content: ["As fases organizam o trabalho de produto e de aprendizagem."],
+    content: [
+      "As fases organizam o trabalho de produto e de aprendizagem. O frontend e a PWA já estão em produção; o backend Fase 2 funciona localmente e aguarda deploy cloud para fechar o ciclo.",
+    ],
     table: {
       headers: ["Fase", "Foco", "Status"],
       rows: [
         ["1 MVP", "UI, UX, mocks", "✅"],
-        ["2 Backend", "API, OCR/ASR, sessões", "✅"],
-        ["3 Avançado", "Vision, TTS, docs", "🔄"],
-        ["4 Escala", "Auth, PWA", "📋"],
+        ["2 Backend", "API, OCR/ASR, sessões", "🟡 (local ok · cloud pendente)"],
+        ["3 Avançado", "Vision, TTS, offline", "📋"],
+        ["4 Escala", "Auth, analytics, edge", "📋"],
       ],
     },
   },
@@ -78,15 +80,18 @@ export const sections: DocSection[] = [
     id: "processes",
     title: "4. Processos do pipeline",
     icon: "Workflow",
-    content: ["O pipeline padroniza o fluxo: ingestão → OCR/ASR → correção → vision → TTS."],
+    content: [
+      "O pipeline padroniza o fluxo: ingestão → layout → OCR/ASR → correção → vision → fusion → saída (TTS/resumo).",
+      "Documentação técnica detalhada: docs/ARCHITECTURE.md",
+    ],
     table: {
-      headers: ["Estágio", "Saída"],
+      headers: ["Estágio", "Saída", "Status"],
       rows: [
-        ["OCR", "Texto + confiança"],
-        ["ASR", "Transcrição"],
-        ["Correção", "Texto limpo + itens"],
-        ["Vision Caption", "Descrição semântica"],
-        ["TTS", "Áudio sintético"],
+        ["OCR", "Texto + confiança", "✅"],
+        ["ASR", "Transcrição", "✅"],
+        ["Correção", "Texto limpo + itens", "✅"],
+        ["Vision Caption", "Descrição semântica", "🟡"],
+        ["TTS / Saída", "Áudio sintético + resumo", "🟡"],
       ],
     },
   },
@@ -127,7 +132,7 @@ export const sections: DocSection[] = [
       "src/components + ui/; serviços em server/services/*",
       "Cliente API: src/services/api.ts",
       "Commits feat|fix|docs|chore",
-      "Docs vivos neste painel + apostila PDF",
+      "Docs vivos neste painel + apostila PDF + docs/ARCHITECTURE.md",
     ],
   },
   {
@@ -141,6 +146,7 @@ export const sections: DocSection[] = [
     bullets: [
       "Módulos A–F: conceitos, fases, leitura, imagem",
       "Exercícios: upload, correção OCR, caption, gerar PDF",
+      "Checklist operacional: CHECKLIST.md no repositório",
     ],
   },
   {
@@ -151,6 +157,7 @@ export const sections: DocSection[] = [
     bullets: [
       "Node 20+, tesseract.js opcional, OPENAI_API_KEY opcional",
       "WCAG 2.2, Dehaene (neurônios da leitura), CLIP/BLIP",
+      "Deploy backend: Railway / Render / Fly · Frontend: Vercel",
     ],
   },
 ];

@@ -1,15 +1,31 @@
 # 🧠 NeuroLeitor
 
-**BioData Reader v0.4 — Fase 2 Backend**
+**BioData Reader v0.6.1 — PWA + Backend Fase 2**
 
 ![NeuroLeitor](./public/hero-neural.webp)
 
-![version](https://img.shields.io/badge/version-0.4.0-cyan?style=flat-square)
-![phase](https://img.shields.io/badge/phase-2%20backend-purple?style=flat-square)
+![version](https://img.shields.io/badge/version-0.6.1-cyan?style=flat-square)
+![phase](https://img.shields.io/badge/phase-2%20backend%20(wip)-purple?style=flat-square)
+![pwa](https://img.shields.io/badge/PWA-ready-green?style=flat-square)
 
 ---
 
-## Fase 2 — Backend (pronto)
+## Estado atual
+
+| Área | Status |
+|------|--------|
+| **Frontend + PWA** | ✅ Online (Vercel) · instalável no celular |
+| **Fase 1 — MVP** | ✅ Concluído |
+| **Fase 2 — Backend** | 🟡 API local completa; falta deploy cloud |
+| **Fase 3 / 4** | 📋 Planejado |
+
+> O site já opera a interface e a apostila. Fases 2–4 “completas de verdade” (API cloud + PWA full) pedem deploy do backend + redeploy do frontend com `VITE_API_URL`.
+
+Veja o **[CHECKLIST.md](./CHECKLIST.md)** e a **[documentação técnica da Arquitetura](./docs/ARCHITECTURE.md)**.
+
+---
+
+## Fase 2 — Backend (local pronto)
 
 | Módulo | Endpoint | Providers |
 |--------|----------|-----------|
@@ -19,7 +35,7 @@
 | **Sessões** | `/api/sessions` | JSON em `server/store/sessions/` |
 | **Health** | `GET /api/health` | status + providers |
 
-Frontend usa a API quando `:3001` está online; senão usa mock.
+Frontend usa a API quando está online; senão usa mock.
 
 ---
 
@@ -50,6 +66,8 @@ npm run dev
 # → http://localhost:5173
 ```
 
+Produção (Vercel): push em `main` → rebuild automático.
+
 ---
 
 ## API
@@ -67,12 +85,18 @@ curl -X POST http://localhost:3001/api/correct -H "Content-Type: application/jso
 
 ```
 server/
-├── index.js routes/api.js
-├── services/ ocr.js asr.js correction.js pipeline.js
+├── index.js · routes/api.js
+├── services/ ocr · asr · correction · pipeline · vision · tts
 └── store/sessions.js
 
-src/services/api.ts
-src/hooks/useApiHealth.ts
+src/
+├── components/ ArchitecturePanel · MultimodalReader · DocsPanel …
+├── services/api.ts
+├── data/docsContent.ts
+└── pages/Index.tsx
+
+docs/ARCHITECTURE.md
+CHECKLIST.md
 ```
 
 ---

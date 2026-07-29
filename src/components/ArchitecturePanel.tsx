@@ -59,7 +59,7 @@ const pipeline = [
     title: "Saída",
     desc: "Texto limpo, áudio TTS, resumo",
     tech: "gTTS · Summarizer",
-    status: "planned" as const,
+    status: "wip" as const,
   },
 ];
 
@@ -126,7 +126,7 @@ export default function ArchitecturePanel() {
           Arquitetura & Roadmap
         </h2>
         <p className="text-sm text-zinc-400 mt-1">
-          Pipeline multimodal, componentes e plano de evolução
+          Pipeline multimodal, componentes e plano de evolução · v0.6.1
         </p>
       </div>
 
@@ -252,6 +252,10 @@ export default function ArchitecturePanel() {
           ))}
         </div>
       </div>
+
+      <p className="text-[11px] text-zinc-600 text-center">
+        Documentação técnica completa: <code className="text-cyan-700">docs/ARCHITECTURE.md</code> · Checklist: <code className="text-cyan-700">CHECKLIST.md</code>
+      </p>
     </div>
   );
 }
