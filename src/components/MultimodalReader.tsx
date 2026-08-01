@@ -11,11 +11,16 @@ import {
   CheckCircle2,
   Eye,
   Volume2,
+  VolumeX,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatBytes, delay } from "@/lib/utils";
+import { processFile as apiProcessFile } from "@/services/api";
+import { speakText, stopSpeaking, isSpeechAvailable } from "@/lib/tts";
 
 type FileType = "pdf" | "image" | "audio" | "text" | "unknown";
 
@@ -27,6 +32,11 @@ interface UploadedFile {
   status: "pending" | "processing" | "done" | "error";
   progress: number;
   result?: string;
+  fullText?: string;
+  source?: "api" | "mock";
+  errorMsg?: string;
+  /** Arquivo original para reenvio à API */
+  rawFile?: File;
 }
 
 function detectType(file: File): FileType {
@@ -45,76 +55,152 @@ const typeIcon = {
   unknown: FileText,
 };
 
+const mockResults: Record<FileType, string> = {
+  pdf: "Documento processado. 12 páginas, 3.842 palavras. Estrutura: título, subtítulos, 2 tabelas e 1 figura. Texto extraído com 98,4% de confiança.",
+  image:
+    "Imagem analisada. Texto detectado (OCR): «Neuro Leitor – Sistema Multimodal». Objetos: cérebro estilizado, circuitos, nós neurais. Caption: Rede neural bioneural em fundo escuro.",
+  audio:
+    "Áudio transcrito (ASR). Duração 00:42. Transcrição: «Bem-vindo ao Neuro Leitor. O motor bioneural está ativo e pronto para processar múltiplas modalidades.» Confiança: 96,1%.",
+  text: "Texto analisado. 1.204 tokens. Sentimento: neutro-positivo. Entidades: Neuro Leitor, Bioneural, Multimodal. Resumo gerado com sucesso.",
+  unknown: "Arquivo processado com pipeline genérico.",
+};
+
 export default function MultimodalReader() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [dragOver, setDragOver] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [speakingId, setSpeakingId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const processFile = useCallback(async (file: UploadedFile) => {
+  const processFile = useCallback(async (uploaded: UploadedFile, raw: File) => {
     setFiles((prev) =>
       prev.map((f) =>
-        f.id === file.id ? { ...f, status: "processing", progress: 10 } : f
+        f.id === uploaded.id ? { ...f, status: "processing", progress: 10, rawFile: raw } : f
       )
     );
 
-    const stages = [
-      { p: 25, msg: "Extraindo layout..." },
-      { p: 45, msg: "OCR / ASR em andamento..." },
-      { p: 70, msg: "Análise semântica..." },
-      { p: 90, msg: "Síntese multimodal..." },
-      { p: 100, msg: "Concluído" },
-    ];
-
-    for (const stage of stages) {
-      await delay(600 + Math.random() * 400);
+    // Animação de progresso enquanto tenta a API
+    const progressTimer = setInterval(() => {
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === file.id ? { ...f, progress: stage.p } : f
+          f.id === uploaded.id && f.status === "processing" && f.progress < 85
+            ? { ...f, progress: Math.min(85, f.progress + 8 + Math.random() * 10) }
+            : f
+        )
+      );
+    }, 400);
+
+    try {
+      const data = await apiProcessFile(raw);
+      clearInterval(progressTimer);
+
+      const summary =
+        data.job?.result ||
+        data.correctedText ||
+        data.text ||
+        "Processamento concluído via API.";
+      const full =
+        data.correctedText ||
+        data.text ||
+        (typeof data.job?.result === "string" ? data.job.result : summary);
+
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === uploaded.id
+            ? {
+                ...f,
+                status: "done",
+                progress: 100,
+                result: summary,
+                fullText: full,
+                source: "api",
+              }
+            : f
+        )
+      );
+    } catch {
+      // Fallback mock (API offline ou erro)
+      clearInterval(progressTimer);
+      const stages = [45, 70, 90, 100];
+      for (const p of stages) {
+        await delay(350 + Math.random() * 250);
+        setFiles((prev) =>
+          prev.map((f) => (f.id === uploaded.id ? { ...f, progress: p } : f))
+        );
+      }
+      const mock = mockResults[uploaded.type];
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === uploaded.id
+            ? {
+                ...f,
+                status: "done",
+                progress: 100,
+                result: mock,
+                fullText: mock,
+                source: "mock",
+              }
+            : f
         )
       );
     }
-
-    const mockResults: Record<FileType, string> = {
-      pdf: "Documento processado. 12 páginas, 3.842 palavras. Estrutura: título, subtítulos, 2 tabelas e 1 figura. Texto extraído com 98,4% de confiança.",
-      image: "Imagem analisada. Texto detectado (OCR): «Neuro Leitor – Sistema Multimodal». Objetos: cérebro estilizado, circuitos, nós neurais. Caption: Rede neural bioneural em fundo escuro.",
-      audio: "Áudio transcrito (ASR). Duração 00:42. Transcrição: «Bem-vindo ao Neuro Leitor. O motor bioneural está ativo e pronto para processar múltiplas modalidades.» Confiança: 96,1%.",
-      text: "Texto analisado. 1.204 tokens. Sentimento: neutro-positivo. Entidades: Neuro Leitor, Bioneural, Multimodal. Resumo gerado com sucesso.",
-      unknown: "Arquivo processado com pipeline genérico.",
-    };
-
-    setFiles((prev) =>
-      prev.map((f) =>
-        f.id === file.id
-          ? {
-              ...f,
-              status: "done",
-              progress: 100,
-              result: mockResults[f.type],
-            }
-          : f
-      )
-    );
   }, []);
 
   const handleFiles = useCallback(
     (fileList: FileList | null) => {
       if (!fileList) return;
-      const newFiles: UploadedFile[] = Array.from(fileList).map((file) => ({
+      const list = Array.from(fileList);
+      const newFiles: UploadedFile[] = list.map((file) => ({
         id: crypto.randomUUID(),
         name: file.name,
         size: file.size,
         type: detectType(file),
-        status: "pending",
+        status: "pending" as const,
         progress: 0,
+        rawFile: file,
       }));
       setFiles((prev) => [...prev, ...newFiles]);
-      newFiles.forEach((f) => processFile(f));
+      newFiles.forEach((f, i) => processFile(f, list[i]));
     },
     [processFile]
   );
 
   const removeFile = (id: string) => {
+    if (speakingId === id) {
+      stopSpeaking();
+      setSpeakingId(null);
+    }
+    if (expandedId === id) setExpandedId(null);
     setFiles((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  const toggleView = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  };
+
+  const handleSpeak = async (file: UploadedFile) => {
+    const text = file.fullText || file.result || "";
+    if (!text) return;
+
+    if (speakingId === file.id) {
+      stopSpeaking();
+      setSpeakingId(null);
+      return;
+    }
+
+    if (!isSpeechAvailable()) {
+      alert("Leitura em voz alta não disponível neste dispositivo/navegador.");
+      return;
+    }
+
+    try {
+      stopSpeaking();
+      setSpeakingId(file.id);
+      await speakText(text, { lang: "pt-BR" });
+      setSpeakingId(null);
+    } catch {
+      setSpeakingId(null);
+    }
   };
 
   return (
@@ -189,6 +275,10 @@ export default function MultimodalReader() {
       <AnimatePresence>
         {files.map((file) => {
           const Icon = typeIcon[file.type];
+          const isExpanded = expandedId === file.id;
+          const isSpeaking = speakingId === file.id;
+          const displayText = file.fullText || file.result || "";
+
           return (
             <motion.div
               key={file.id}
@@ -209,12 +299,19 @@ export default function MultimodalReader() {
                     <button
                       onClick={() => removeFile(file.id)}
                       className="text-zinc-500 hover:text-red-400 transition-colors"
+                      aria-label="Remover"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
                   <p className="text-xs text-zinc-500 mt-0.5">
                     {formatBytes(file.size)} · {file.type.toUpperCase()}
+                    {file.source === "api" && (
+                      <span className="ml-2 text-green-500">· API</span>
+                    )}
+                    {file.source === "mock" && (
+                      <span className="ml-2 text-amber-500">· mock</span>
+                    )}
                   </p>
 
                   {file.status === "processing" && (
@@ -236,17 +333,67 @@ export default function MultimodalReader() {
                       <p className="text-sm text-zinc-300 leading-relaxed">
                         {file.result}
                       </p>
+
                       <div className="flex gap-2 mt-3">
-                        <Button size="sm" variant="outline">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => toggleView(file.id)}
+                        >
                           <Eye className="h-3.5 w-3.5" />
-                          Visualizar
+                          {isExpanded ? "Ocultar" : "Visualizar"}
+                          {isExpanded ? (
+                            <ChevronUp className="h-3.5 w-3.5 ml-1" />
+                          ) : (
+                            <ChevronDown className="h-3.5 w-3.5 ml-1" />
+                          )}
                         </Button>
-                        <Button size="sm" variant="outline">
-                          <Volume2 className="h-3.5 w-3.5" />
-                          Ouvir
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleSpeak(file)}
+                        >
+                          {isSpeaking ? (
+                            <>
+                              <VolumeX className="h-3.5 w-3.5" />
+                              Parar
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="h-3.5 w-3.5" />
+                              Ouvir
+                            </>
+                          )}
                         </Button>
                       </div>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="mt-3 max-h-64 overflow-y-auto rounded-md bg-zinc-950/80 border border-zinc-700/50 p-3">
+                              <p className="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wide">
+                                Conteúdo extraído
+                              </p>
+                              <pre className="text-sm text-zinc-200 whitespace-pre-wrap break-words font-sans leading-relaxed">
+                                {displayText}
+                              </pre>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
+                  )}
+
+                  {file.status === "error" && (
+                    <p className="mt-2 text-xs text-red-400">
+                      {file.errorMsg || "Erro no processamento"}
+                    </p>
                   )}
                 </div>
               </div>
