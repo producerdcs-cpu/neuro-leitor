@@ -58,8 +58,8 @@ const pipeline = [
     id: "output",
     title: "Saída",
     desc: "Texto limpo, áudio TTS, resumo",
-    tech: "gTTS · Summarizer",
-    status: "wip" as const,
+    tech: "SpeechSynthesis · Summarizer",
+    status: "done" as const,
   },
 ];
 
@@ -77,20 +77,20 @@ const roadmap = [
   {
     phase: "Fase 2 — Backend",
     items: [
-      "API de OCR real (Tesseract / cloud)",
-      "ASR com Whisper local/API",
-      "Pipeline de correção com LLM",
-      "Persistência de sessões",
+      "API online (Railway) + health",
+      "Frontend ligado (VITE_API_URL)",
+      "Upload → process → Visualizar / Ouvir",
+      "Sessões + providers locais",
     ],
-    status: "wip" as const,
+    status: "done" as const,
   },
   {
     phase: "Fase 3 — Avançado",
     items: [
-      "Vision captioning real",
-      "TTS multilíngue",
-      "Modo offline (WebAssembly)",
-      "Extensão de navegador",
+      "OCR real (Tesseract / cloud)",
+      "ASR Whisper real",
+      "Vision captioning",
+      "TTS multilíngue aprimorado",
     ],
     status: "planned" as const,
   },
@@ -126,7 +126,7 @@ export default function ArchitecturePanel() {
           Arquitetura & Roadmap
         </h2>
         <p className="text-sm text-zinc-400 mt-1">
-          Pipeline multimodal, componentes e plano de evolução · v0.6.1
+          Pipeline multimodal, componentes e plano de evolução · v0.6.2
         </p>
       </div>
 
@@ -195,7 +195,7 @@ export default function ArchitecturePanel() {
           </div>
           <ul className="space-y-1.5 text-sm text-zinc-400">
             {[
-              "API Gateway (FastAPI / Node)",
+              "API Gateway (Node / Express)",
               "OCR Service (Tesseract / Cloud)",
               "ASR Service (Whisper)",
               "LLM Correction Layer",
