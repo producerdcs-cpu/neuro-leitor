@@ -1,48 +1,54 @@
-# ✅ Checklist Geral — NeuroLeitor BioData Reader v0.6.1
+# ✅ Checklist Geral — NeuroLeitor BioData Reader v0.6.2
 
-> Atualizado 2026-07-28 · Deploy backend pronto (`docs/DEPLOY.md`)
+> Atualizado 2026-08-01 · **Fase 2 concluída**
 
 ## 1. Estado atual
 
 | Item | Status | Observação |
 |------|--------|------------|
-| **Frontend (UI + PWA)** | ✅ Operacional | React + Vite + PWA instalável no celular |
+| **Frontend (UI + PWA)** | ✅ Operacional | React + Vite + PWA no celular |
 | **Fase 1 — MVP** | ✅ Concluído | Dashboard, abas, motor bioneural, mocks |
-| **Fase 2 — Backend** | 🟡 Código pronto · deploy pendente | API local completa. Dockerfile + Railway docs prontos. Falta subir e ligar `VITE_API_URL` |
-| **Fase 3 / 4** | 📋 Planejado | Vision, TTS multi, offline, auth, edge |
-| **Vercel** | ✅ Frontend online | Redeploy automático no push |
+| **Fase 2 — Backend** | ✅ Concluído | Railway online + Vercel `VITE_API_URL` + Visualizar/Ouvir |
+| **Fase 3 / 4** | 📋 Planejado | OCR real, Whisper, Vision, TTS multi, auth |
+| **Vercel** | ✅ Frontend online | [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app) |
+| **Railway** | ✅ API online | `neuro-leitor-copy-production.up.railway.app` |
 
-## 2. Fechar Fase 2 (hoje ou amanhã)
+## 2. Fase 2 — itens fechados
 
-Siga **[docs/DEPLOY.md](./docs/DEPLOY.md)** — ~10–15 min com Railway.
-
-- [ ] Criar projeto no Railway (GitHub → root `server`)
-- [ ] Variáveis: `CORS_ORIGIN`, `OCR_PROVIDER=local`, etc.
-- [ ] Generate Domain → anotar URL da API
-- [ ] `curl …/api/health` → `ok: true`
-- [ ] No Vercel: `VITE_API_URL=https://sua-api…`
-- [ ] Redeploy frontend
-- [ ] No celular: header **API verde** + upload real
+- [x] Projeto Railway (Root Directory = `server`)
+- [x] Variáveis: `PORT`, `HOST`, `NODE_ENV`, `CORS_ORIGIN`, providers locais
+- [x] Generate Domain público
+- [x] `GET /api/health` → produção OK
+- [x] Vercel: `VITE_API_URL` apontando para a API
+- [x] Redeploy frontend
+- [x] Header **Sistema Online** (verde) no celular
+- [x] Upload processa via API (badge · API)
+- [x] **Visualizar** expande conteúdo extraído
+- [x] **Ouvir** (SpeechSynthesis / TTS do navegador)
+- [x] Roadmap na UI marca Fase 2 como Concluído
 
 ## 3. Checklist PWA mobile
 
 - [x] App instalado (Add to Home Screen)
 - [x] Manifest + service worker
-- [ ] API backend online (health verde)
-- [ ] Upload real via API
-- [ ] Sessões entre abas
-- [ ] TTS “Ouvir”
+- [x] API backend online (health verde)
+- [x] Upload via API
+- [x] TTS “Ouvir”
+- [ ] Sessões persistentes entre redeploys (disco efêmero no Railway — ok para MVP)
 
 ## 4. Fase 3 / 4 (futuro)
 
-**Fase 3:** Vision caption real · TTS multilíngue · offline WASM · extensão  
-**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge completo
+**Fase 3:** OCR real (Tesseract / cloud) · ASR Whisper · Vision caption · TTS multilíngue  
+**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge completo · mais formatos (DOCX, vídeo, IoT…)
 
-## 5. Fazer hoje ou amanhã?
+## 5. URLs de produção
 
-- **Hoje:** se tiver 10–15 min → Railway + `VITE_API_URL` → Fase 2 fechada.
-- **Amanhã:** também ok. Frontend e apostila já estão estáveis; nada quebra.
+| Serviço | URL |
+|---------|-----|
+| Frontend | https://neuro-leitor.vercel.app |
+| API | https://neuro-leitor-copy-production.up.railway.app |
+| Health | https://neuro-leitor-copy-production.up.railway.app/api/health |
 
 ---
 
-**Resumo:** backend está *deploy-ready*. Um serviço Railway + uma env no Vercel e a Fase 2 fecha de verdade.
+**Resumo:** Fase 2 fechada de ponta a ponta (infra + UI). Próximo foco opcional: OCR/ASR reais (Fase 3) ou pausa para outros projetos.

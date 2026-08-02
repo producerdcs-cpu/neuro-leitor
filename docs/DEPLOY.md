@@ -1,131 +1,105 @@
-# Deploy do Backend — Fechar Fase 2
+# Deploy do Backend — Fase 2 (concluída)
 
-**Tempo estimado:** 10–15 minutos  
-**Recomendado:** Railway (gratuito para começar, Node + Docker simples)
+**Status:** ✅ Aplicado em produção (2026-08-01)  
+**Plataforma:** Railway + Vercel
 
 ---
 
-## Opção A — Railway (recomendada)
+## Produção atual
 
-### 1. Conta e projeto
-1. Acesse [railway.app](https://railway.app) e entre com GitHub.
-2. **New Project** → **Deploy from GitHub repo** → escolha `producerdcs-cpu/neuro-leitor`.
-3. No serviço criado:
-   - **Settings → Root Directory** = `server`
-   - Ou use o Dockerfile da raiz (`railway.toml` já aponta para `server/Dockerfile`).
+| Item | Valor |
+|------|--------|
+| **API** | https://neuro-leitor-copy-production.up.railway.app |
+| **Health** | https://neuro-leitor-copy-production.up.railway.app/api/health |
+| **Frontend** | https://neuro-leitor.vercel.app |
+| **Root Directory** | `server` |
+| **Branch** | `main` |
+| **Região** | US West (California) |
 
-### 2. Variáveis de ambiente (Settings → Variables)
+### Variáveis no Railway (serviço)
 
 ```
 PORT=3001
 HOST=0.0.0.0
 NODE_ENV=production
-CORS_ORIGIN=https://SEU-FRONTEND.vercel.app,http://localhost:5173
+CORS_ORIGIN=https://neuro-leitor.vercel.app,http://localhost:5173
 OCR_PROVIDER=local
 ASR_PROVIDER=local
 CORRECTION_PROVIDER=local
-# Opcional (OCR/ASR/correção reais):
-# OPENAI_API_KEY=sk-...
-# OCR_PROVIDER=openai
-# ASR_PROVIDER=openai
-# CORRECTION_PROVIDER=openai
+SESSION_DIR=./store/sessions
 ```
 
-> Substitua `https://SEU-FRONTEND.vercel.app` pela URL real do Vercel (ex.: `https://neuro-leitor.vercel.app`).
-
-### 3. Gerar domínio público
-- **Settings → Networking → Generate Domain**
-- Anote a URL, ex.: `https://neuro-leitor-api-production.up.railway.app`
-
-### 4. Testar
-```bash
-curl https://SUA-API.up.railway.app/api/health
-```
-Deve retornar `{"ok":true,"phase":2,...}`.
-
-### 5. Ligar o frontend
-No projeto Vercel (ou no repositório):
-1. **Environment Variables** → `VITE_API_URL` = `https://SUA-API.up.railway.app`
-2. Redeploy do frontend (ou push qualquer commit).
-3. No celular: feche e reabra o PWA → o indicador no header deve ficar **verde** (API online).
-
----
-
-## Opção B — Render
-
-1. [render.com](https://render.com) → New → Web Service → conecte o repo.
-2. **Root Directory:** `server`
-3. **Build:** `npm install`
-4. **Start:** `node index.js`
-5. Mesmas variáveis de ambiente da Opção A.
-6. Domínio grátis `*.onrender.com`.
-
----
-
-## Opção C — Fly.io
-
-```bash
-# Na pasta server/
-cd server
-fly launch --name neuro-leitor-api --region gru
-fly secrets set CORS_ORIGIN=https://SEU-FRONTEND.vercel.app
-fly deploy
-```
-
-Use o `Dockerfile` já existente.
-
----
-
-## Opção D — Vercel Serverless (alternativa)
-
-Express + multer + upload de arquivo funciona melhor como **serviço contínuo** (Railway/Render).  
-Serverless no Vercel exige adaptações (`@vercel/node`, limite de body ~4,5 MB, cold start).  
-Para Fase 2, **prefira Railway**.
-
-Se quiser depois: podemos criar `api/index.js` como handler serverless.
-
----
-
-## Checklist pós-deploy (Fase 2 fechada)
-
-- [ ] `GET /api/health` responde 200
-- [ ] `CORS_ORIGIN` inclui a URL do frontend Vercel
-- [ ] `VITE_API_URL` no Vercel aponta para a API
-- [ ] Frontend redeployado
-- [ ] Header do app no celular mostra API verde
-- [ ] Upload de imagem/PDF processa de verdade (não só mock)
-
----
-
-## CORS e produção
-
-O `server/index.js` já aceita vários origins separados por vírgula:
+### Variável no Vercel
 
 ```
-CORS_ORIGIN=https://neuro-leitor.vercel.app,https://neuro-leitor-xxx.vercel.app,http://localhost:5173
+VITE_API_URL=https://neuro-leitor-copy-production.up.railway.app
 ```
 
-Sem `CORS_ORIGIN` em produção, o padrão continua `localhost` e o browser bloqueia.
+(Ambiente: Production; rebuild sem cache após alteração.)
 
 ---
 
-## Sessões em disco
+## Como foi feito (referência)
 
-As sessões ficam em `store/sessions/` (arquivo JSON).  
-Em Railway/Render o disco é **efêmero** (some no redeploy). Para MVP da Fase 2 isso é aceitável.  
-Fase 4: migrar para Postgres/SQLite persistente.
+1. Railway → Deploy from GitHub → `producerdcs-cpu/neuro-leitor`
+2. Settings → Root Directory = `server`
+3. Variables (tabela acima)
+4. Networking → Generate Domain
+5. `curl …/api/health` → OK
+6. Vercel → Environment Variable `VITE_API_URL` → Redeploy
+7. Celular: header **Sistema Online** + upload com badge **· API**
 
 ---
 
-## Fazer hoje ou amanhã?
+## Checklist pós-deploy (todos OK)
 
-| Hoje (10–15 min) | Amanhã |
-|------------------|--------|
-| Railway + 5 variáveis + Generate Domain | Mesmo fluxo, com mais calma |
-| Setar `VITE_API_URL` no Vercel e redeploy | — |
-| Testar health + upload no celular | — |
+- [x] `GET /api/health` responde 200
+- [x] `CORS_ORIGIN` inclui o frontend Vercel
+- [x] `VITE_API_URL` no Vercel
+- [x] Frontend redeployado
+- [x] Header verde no celular
+- [x] Upload processa via API
+- [x] Visualizar + Ouvir na UI
 
-O **frontend e a PWA já estão estáveis**. Fechar a Fase 2 hoje dá a sensação de “API real no bolso”; deixar para amanhã também é perfeito se estiver cansado.
+---
+
+## Manutenção
+
+### Redeploy backend
+- Push em `main` com alteração em `server/` **ou** botão Deploy no Railway.
+- Auto-deploy GitHub pode estar desabilitado no serviço; use Deploy manual se necessário.
+
+### Trocar providers (Fase 3)
+
+```
+OPENAI_API_KEY=sk-...
+OCR_PROVIDER=openai
+ASR_PROVIDER=openai
+CORRECTION_PROVIDER=openai
+```
+
+Depois: Deploy no Railway.
+
+### CORS
+
+Vários origins separados por vírgula:
+
+```
+CORS_ORIGIN=https://neuro-leitor.vercel.app,https://outro.vercel.app,http://localhost:5173
+```
+
+### Sessões
+
+Disco do Railway é **efêmero** (some no redeploy). Aceitável na Fase 2.  
+Fase 4: Postgres/SQLite persistente.
+
+---
+
+## Alternativas (se precisar recriar)
+
+- **Render:** Root `server`, start `node index.js`
+- **Fly.io:** `fly launch` na pasta `server/`
+- **Vercel Serverless:** não recomendado para multer/upload contínuo
 
 ---
 
