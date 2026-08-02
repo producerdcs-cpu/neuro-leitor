@@ -10,8 +10,11 @@
 ![api](https://img.shields.io/badge/API-Railway%20online-green?style=flat-square)
 
 **Live**
-- Frontend: [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app)
-- API: [neuro-leitor-copy-production.up.railway.app](https://neuro-leitor-copy-production.up.railway.app)
+- Frontend (Vercel): [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app)
+- API (Railway): [neuro-leitor-copy-production.up.railway.app](https://neuro-leitor-copy-production.up.railway.app)
+- Health: […/api/health](https://neuro-leitor-copy-production.up.railway.app/api/health)
+
+**Guia completo de deploy:** [docs/DEPLOY.md](./docs/DEPLOY.md) (Vercel + Railway passo a passo)
 
 ---
 
@@ -30,6 +33,28 @@ Veja o **[CHECKLIST.md](./CHECKLIST.md)** e a **[documentação técnica](./docs
 
 ---
 
+## Deploy em produção (resumo)
+
+### Railway (API)
+
+| Item | Valor |
+|------|--------|
+| Root Directory | `server` |
+| Domain | `https://neuro-leitor-copy-production.up.railway.app` |
+| Variáveis | `PORT`, `HOST`, `NODE_ENV`, `CORS_ORIGIN`, `OCR_PROVIDER=local`, `ASR_PROVIDER=local`, `CORRECTION_PROVIDER=local` |
+
+### Vercel (Frontend)
+
+| Item | Valor |
+|------|--------|
+| URL | `https://neuro-leitor.vercel.app` |
+| Env | `VITE_API_URL=https://neuro-leitor-copy-production.up.railway.app` |
+| Após mudar env | Redeploy **sem** cache de build |
+
+Passo a passo completo (criar projeto, Generate Domain, secrets CI, CORS, manutenção): **[docs/DEPLOY.md](./docs/DEPLOY.md)**.
+
+---
+
 ## Fase 2 — Backend (fechada)
 
 | Módulo | Endpoint | Status |
@@ -41,12 +66,11 @@ Veja o **[CHECKLIST.md](./CHECKLIST.md)** e a **[documentação técnica](./docs
 | **Frontend** | `VITE_API_URL` no Vercel | ✅ |
 | **UI** | Visualizar + Ouvir | ✅ |
 
-Providers atuais: `OCR_PROVIDER=local`, `ASR_PROVIDER=local`, `CORRECTION_PROVIDER=local`.  
-OCR/ASR **reais** (Tesseract, Whisper, OpenAI) entram na **Fase 3**.
+Providers atuais: `local`. OCR/ASR **reais** (Tesseract, Whisper, OpenAI) → **Fase 3**.
 
 ---
 
-## Como rodar
+## Como rodar local
 
 ### Backend
 
@@ -57,8 +81,6 @@ npm run dev
 # → http://localhost:3001/api/health
 ```
 
-Produção: Railway (`Root Directory = server`). Ver [docs/DEPLOY.md](./docs/DEPLOY.md).
-
 ### Frontend
 
 ```bash
@@ -67,11 +89,11 @@ npm run dev
 # → http://localhost:5173
 ```
 
-Produção: Vercel · env `VITE_API_URL=https://neuro-leitor-copy-production.up.railway.app`
+Opcional: `.env` com `VITE_API_URL=http://localhost:3001` ou a URL do Railway.
 
 ---
 
-## API
+## API (produção)
 
 ```bash
 curl https://neuro-leitor-copy-production.up.railway.app/api/health
@@ -112,7 +134,7 @@ CHECKLIST.md
 | 3 — OCR/ASR reais, Vision, TTS avançado | 📋 Planejado |
 | 4 — Escala, auth, analytics | 📋 Planejado |
 
-Visão de produto de longo prazo (referência do protótipo Atom): documentos, áudio, vídeo, código, IoT, biometria — evolui por fases, não tudo de uma vez.
+Visão de longo prazo (referência protótipo Atom): documentos, áudio, vídeo, código, IoT, biometria — por fases.
 
 ---
 
