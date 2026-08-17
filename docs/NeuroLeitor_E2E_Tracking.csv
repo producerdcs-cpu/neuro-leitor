@@ -1,0 +1,15 @@
+ID,Category,Case,Pass/Fail,Executor,Date,Evidence,Notes
+INF-01,Infrastructure,GET /api/health (expect {ok:true, phase:2}),, , , ,Check with curl
+API-02,API,/api/process (image PNG/JPG),, , , ,Upload sample image and verify text
+API-03,API,/api/process (PDF with text),, , , ,Upload PDF and verify extraction
+API-04,API,/api/process (text file .txt),, , , ,Upload .txt
+API-05,API,/api/process (invalid/large file),, , , ,Expect 4xx with friendly message
+API-06,API,/api/correct (text correction),, , , ,POST {text: ...}
+API-07,API,/api/process with X-Session-Id header (session),, , , ,Verify session preserved
+UI-01,UI,Frontend loads and shows header online,, , , ,Open https://neuro-leitor.vercel.app
+UI-02,UI,Upload image from UI,, , , ,Verify badge “· API” and Visualizar
+UI-03,UI,Visualizar result,, , , ,Click Visualizar
+UI-04,UI,TTS Ouvir,, , , ,Click Ouvir
+UI-07,UI,PWA Install,, , , ,Install on mobile
+RES-01,Resilience,File empty,, , , ,Send empty file
+RES-02,Resilience,File > limit (10-20MB),, , , ,Send large file
