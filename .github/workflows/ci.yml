@@ -1,6 +1,9 @@
 # NeuroLeitor — CI simples e seguro
 # Roda em todo push e pull_request.
 # Deploy (Vercel / Railway) só na branch main e só se os Secrets existirem.
+#
+# Nota: o contexto `secrets` NÃO pode ser usado em `if:` de steps/jobs
+# (erro: "Unrecognized named-value: 'secrets'"). Solução: mapear para `env` no job.
 
 name: CI
 
@@ -9,7 +12,7 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-  workflow_dispatch: # permite rodar manualmente no GitHub (botão "Run workflow")
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -40,12 +43,11 @@ jobs:
 
       - name: Typecheck
         run: npx tsc --noEmit
-        continue-on-error: true # ainda sem testes rígidos; não bloqueia
+        continue-on-error: true
 
       - name: Build PWA
         run: npm run build
         env:
-          # Build de CI não precisa da API real; placeholder seguro
           VITE_API_URL: ${{ vars.VITE_API_URL || 'http://localhost:3001' }}
 
       - name: Upload dist (artefato)
@@ -95,56 +97,62 @@ jobs:
           CORRECTION_PROVIDER: local
 
   # ─────────────────────────────────────────
-  # 3. Deploy Frontend (Vercel) — só main + secret
+  # 3. Deploy Frontend (Vercel) — só main
   # ─────────────────────────────────────────
   deploy-frontend:
     name: Deploy Frontend (Vercel)
     needs: [frontend, backend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Deploy to Vercel
-        # Só roda se VERCEL_TOKEN estiver configurado em Settings → Secrets
-        if: ${{ secrets.VERCEL_TOKEN != '' }}
+        if: env.VERCEL_TOKEN != ''
         uses: amondnet/vercel-action@v25
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-token: ${{ env.VERCEL_TOKEN }}
+          vercel-org-id: ${{ env.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ env.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           working-directory: ./
 
       - name: Skip (sem secrets)
-        if: ${{ secrets.VERCEL_TOKEN == '' }}
+        if: env.VERCEL_TOKEN == ''
         run: echo "⚠️ VERCEL_TOKEN não configurado — deploy frontend pulado. Configure em Settings → Secrets and variables → Actions."
 
   # ─────────────────────────────────────────
-  # 4. Deploy Backend (Railway) — só main + secret
+  # 4. Deploy Backend (Railway) — só main
   # ─────────────────────────────────────────
   deploy-backend:
     name: Deploy Backend (Railway)
     needs: [frontend, backend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install Railway CLI
-        if: ${{ secrets.RAILWAY_TOKEN != '' }}
+        if: env.RAILWAY_TOKEN != ''
         run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        if: ${{ secrets.RAILWAY_TOKEN != '' }}
+        if: env.RAILWAY_TOKEN != ''
         run: |
-          railway up --service ${{ secrets.RAILWAY_SERVICE_ID || 'neuro-leitor-api' }} --detach || railway up --detach
+          railway up --service "${RAILWAY_SERVICE_ID:-neuro-leitor-api}" --detach || railway up --detach
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ env.RAILWAY_TOKEN }}
         working-directory: server
 
       - name: Skip (sem secrets)
-        if: ${{ secrets.RAILWAY_TOKEN == '' }}
+        if: env.RAILWAY_TOKEN == ''
         run: echo "⚠️ RAILWAY_TOKEN não configurado — deploy backend pulado. Configure em Settings → Secrets."
