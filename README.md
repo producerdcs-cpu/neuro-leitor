@@ -1,20 +1,42 @@
 # 🧠 NeuroLeitor
 
-**BioData Reader v0.6.2 — PWA + Backend Fase 2 concluída**
+**BioData Reader v0.6.2** — Leitor multimodal com motor bioneural, reconhecimento e correção de erros.
+
+[![version](https://img.shields.io/badge/version-0.6.2-cyan?style=flat-square)](https://github.com/producerdcs-cpu/neuro-leitor)
+[![phase](https://img.shields.io/badge/phase-2%20backend%20done-green?style=flat-square)](#estado-atual)
+[![PWA](https://img.shields.io/badge/PWA-ready-green?style=flat-square)](https://neuro-leitor.vercel.app)
+[![API](https://img.shields.io/badge/API-Railway%20online-green?style=flat-square)](https://neuro-leitor-copy-production.up.railway.app/api/health)
+[![DcsProducer®](https://img.shields.io/badge/DcsProducer®-Portfolio-gold?style=flat-square)](https://dcsproducer-hub.vercel.app/)
 
 ![NeuroLeitor](./public/hero-neural.webp)
 
-![version](https://img.shields.io/badge/version-0.6.2-cyan?style=flat-square)
-![phase](https://img.shields.io/badge/phase-2%20backend%20done-green?style=flat-square)
-![pwa](https://img.shields.io/badge/PWA-ready-green?style=flat-square)
-![api](https://img.shields.io/badge/API-Railway%20online-green?style=flat-square)
+**Parte do portfólio GenAI / produto DcsProducer®.**  
+1º lançamento público da sequência de governança (Lista_Projetos · ordem 1).
 
-**Live**
-- Frontend (Vercel): [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app)
-- API (Railway): [neuro-leitor-copy-production.up.railway.app](https://neuro-leitor-copy-production.up.railway.app)
-- Health: […/api/health](https://neuro-leitor-copy-production.up.railway.app/api/health)
+| | |
+|---|---|
+| **Live (frontend)** | [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app) |
+| **API** | [Railway production](https://neuro-leitor-copy-production.up.railway.app) |
+| **Health** | [GET /api/health](https://neuro-leitor-copy-production.up.railway.app/api/health) |
+| **Projects Hub** | [dcsproducer-hub.vercel.app](https://dcsproducer-hub.vercel.app/) |
+| **Portfólio executivo** | [core-hub-aegis.vercel.app](https://core-hub-aegis.vercel.app/) |
 
-**Guia completo de deploy:** [docs/DEPLOY.md](./docs/DEPLOY.md) (Vercel + Railway passo a passo)
+Deploy passo a passo: [docs/DEPLOY.md](./docs/DEPLOY.md) · Checklist: [CHECKLIST.md](./CHECKLIST.md) · Arquitetura: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+
+---
+
+## O que é
+
+PWA + API para leitura multimodal de documentos e mídia, com pipeline de reconhecimento e correção. Stack: **React · Vite · Tailwind · Framer Motion** (frontend) e **Node** (API na Railway).
+
+| Capacidade | Status |
+|------------|--------|
+| Upload e processamento via API | ✅ Produção |
+| Visualizar conteúdo extraído | ✅ |
+| Ouvir (TTS do navegador) | ✅ |
+| PWA instalável no celular | ✅ |
+| Header *Sistema Online* | ✅ |
+| OCR / ASR reais (Tesseract, Whisper…) | 📋 Fase 3 |
 
 ---
 
@@ -22,14 +44,10 @@
 
 | Área | Status |
 |------|--------|
-| **Frontend + PWA** | ✅ Online (Vercel) · instalável no celular |
+| **Frontend + PWA** | ✅ Online (Vercel) · instalável |
 | **Fase 1 — MVP** | ✅ Concluído |
 | **Fase 2 — Backend** | ✅ Concluído (Railway + `VITE_API_URL` + Visualizar/Ouvir) |
-| **Fase 3 / 4** | 📋 Planejado (OCR real, Whisper, Vision…) |
-
-> Header **Sistema Online** no celular, upload via API, Visualizar (expande texto) e Ouvir (TTS do navegador).
-
-Veja o **[CHECKLIST.md](./CHECKLIST.md)** e a **[documentação técnica](./docs/ARCHITECTURE.md)**.
+| **Fase 3 / 4** | 📋 Planejado (OCR real, Whisper, Vision, auth) |
 
 ---
 
@@ -51,7 +69,7 @@ Veja o **[CHECKLIST.md](./CHECKLIST.md)** e a **[documentação técnica](./docs
 | Env | `VITE_API_URL=https://neuro-leitor-copy-production.up.railway.app` |
 | Após mudar env | Redeploy **sem** cache de build |
 
-Passo a passo completo (criar projeto, Generate Domain, secrets CI, CORS, manutenção): **[docs/DEPLOY.md](./docs/DEPLOY.md)**.
+Detalhes: [docs/DEPLOY.md](./docs/DEPLOY.md).
 
 ---
 
@@ -66,7 +84,7 @@ Passo a passo completo (criar projeto, Generate Domain, secrets CI, CORS, manute
 | **Frontend** | `VITE_API_URL` no Vercel | ✅ |
 | **UI** | Visualizar + Ouvir | ✅ |
 
-Providers atuais: `local`. OCR/ASR **reais** (Tesseract, Whisper, OpenAI) → **Fase 3**.
+Providers atuais: `local`. OCR/ASR **reais** → **Fase 3**.
 
 ---
 
@@ -125,17 +143,30 @@ CHECKLIST.md
 
 ---
 
-## Roadmap resumido
+## Roadmap
 
 | Fase | Status |
 |------|--------|
 | 1 — MVP | ✅ Concluído |
-| 2 — Backend (API cloud + PWA ligado) | ✅ Concluído |
+| 2 — Backend (API cloud + PWA) | ✅ Concluído |
 | 3 — OCR/ASR reais, Vision, TTS avançado | 📋 Planejado |
 | 4 — Escala, auth, analytics | 📋 Planejado |
 
-Visão de longo prazo (referência protótipo Atom): documentos, áudio, vídeo, código, IoT, biometria — por fases.
+---
+
+## Portfólio DcsProducer®
+
+Este repositório é o **primeiro lançamento público** da sequência definida em `Lista_Projetos.xlsx` (ordem 1), após fechamento da ordem 0 (skill `pdf-wordpress-editor` + [Projects Hub](https://dcsproducer-hub.vercel.app/)).
+
+- Código de produto e demos sanitizadas: este repo + live Vercel/Railway.
+- Governança e planilha: Hub privado + skill.
+- Segurança / AEGIS: pointer público apenas em [`aegis-dcs`](https://github.com/producerdcs-cpu/aegis-dcs) (sem motor).
 
 ---
 
-MIT © 2026 Producer DCS · [producerdcs-cpu/neuro-leitor](https://github.com/producerdcs-cpu/neuro-leitor)
+## NOTICE
+
+MIT © 2026 **DcsProducer® Creative Studio** / [producerdcs-cpu](https://github.com/producerdcs-cpu)
+
+Marca e identidade visual: DcsProducer®.  
+Sem segredos, datasets proprietários ou motor AEGIS/DUC neste repositório.
