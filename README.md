@@ -10,6 +10,10 @@
 
 ![NeuroLeitor](./public/hero-neural.webp)
 
+![UI live](./public/ui-live.png)
+
+> Demo da interface em produção — upload multimodal, navegação e **Sistema Online**.
+
 **Parte do portfólio GenAI / produto DcsProducer®.**  
 1º lançamento público da sequência de governança (Lista_Projetos · ordem 1).
 
