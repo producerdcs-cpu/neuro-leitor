@@ -1,32 +1,33 @@
 # ✅ Checklist Geral — NeuroLeitor BioData Reader v0.6.2
 
-> Atualizado 2026-08-13 · **Fase 2 concluída** · Plano de Validação E2E de Produção adicionado
+> Atualizado **2026-10-13** · **Ordem 1 (Gate) FECHADA** · API migrada Railway → **Render**
 
 ## 1. Estado atual
 
 | Item | Status | Observação |
 |------|--------|------------|
-| **Frontend (UI + PWA)** | ✅ Operacional | React + Vite + PWA no celular |
+| **Frontend (UI + PWA)** | ✅ Operacional | React + Vite + PWA · [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app) |
 | **Fase 1 — MVP** | ✅ Concluído | Dashboard, abas, motor bioneural, mocks |
-| **Fase 2 — Backend** | ✅ Concluído | Railway online + Vercel `VITE_API_URL` + Visualizar/Ouvir |
-| **Validação E2E Produção** | 📋 Em andamento | Plano detalhado + planilha de tracking (13/08/2026) |
+| **Fase 2 — Backend** | ✅ Concluído | **Render** online + Vercel `VITE_API_URL` + Visualizar/Ouvir |
+| **Ordem 1 (governança)** | ✅ **FECHADA 13 out 2026** | Secrets limpo · health 200 · Sistema Online · LICENSE MIT · escopo congelado |
 | **Fase 3 / 4** | 📋 Planejado | OCR real, Whisper, Vision, TTS multi, auth |
-| **Vercel** | ✅ Frontend online | [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app) |
-| **Railway** | ✅ API online | `neuro-leitor-copy-production.up.railway.app` |
+| **Vercel** | ✅ Frontend online | Sistema Online (verde) |
+| **Render (API)** | ✅ API online | https://neuro-leitor.onrender.com |
+| **Railway** | ⛔ Legado | Trial expired — offline; pode deletar |
 
 ## 2. Fase 2 — itens fechados
 
-- [x] Projeto Railway (Root Directory = `server`)
+- [x] Web Service Render (Root Directory = `server`)
 - [x] Variáveis: `PORT`, `HOST`, `NODE_ENV`, `CORS_ORIGIN`, providers locais
-- [x] Generate Domain público
-- [x] `GET /api/health` → produção OK
-- [x] Vercel: `VITE_API_URL` apontando para a API
-- [x] Redeploy frontend
-- [x] Header **Sistema Online** (verde) no celular
+- [x] Domínio público Render
+- [x] `GET /api/health` → produção OK (200)
+- [x] Vercel: `VITE_API_URL` = `https://neuro-leitor.onrender.com` (tipo **Config**)
+- [x] Redeploy frontend sem cache
+- [x] Header **Sistema Online** (verde)
 - [x] Upload processa via API (badge · API)
-- [x] **Visualizar** expande conteúdo extraído
-- [x] **Ouvir** (SpeechSynthesis / TTS do navegador)
-- [x] Roadmap na UI marca Fase 2 como Concluído
+- [x] **Visualizar** / **Ouvir** (TTS browser)
+- [x] Secrets scan limpo (sem chaves no git)
+- [x] LICENSE MIT
 
 ## 3. Checklist PWA mobile
 
@@ -35,60 +36,37 @@
 - [x] API backend online (health verde)
 - [x] Upload via API
 - [x] TTS “Ouvir”
-- [ ] Sessões persistentes entre redeploys (disco efêmero no Railway — ok para MVP)
+- [ ] Sessões persistentes entre redeploys (disco efêmero no free tier — ok para MVP)
 
-## 4. Validação de Produção E2E (Plano 13/08/2026)
+## 4. Validação de Produção E2E
 
-> Fonte: Sequência A — Plano de Testes E2E + Checklist de Validação de Produção  
-> Tracking: planilha `NeuroLeitor_E2E_Tracking.xlsx` (DcsProducer®)
+> Plano histórico 13/08/2026. Infra crítica revalidada em **13/10/2026** após migração Render.
 
-### 4.1 Categorias de teste
+| Caso crítico | 13/10/2026 |
+|--------------|------------|
+| INF-01 Health API | ✅ PASS |
+| INF-03 Header Sistema Online | ✅ PASS |
+| API providers locais | ✅ PASS |
 
-| Categoria | Qtd. casos | Foco |
-|-----------|------------|------|
-| Infraestrutura | 7 | Health, CORS, env, header online, redeploy |
-| API Backend | 8 | `/api/health`, `/api/process`, `/api/correct`, sessões |
-| Frontend + UI + PWA | 10 | Upload, Visualizar, Ouvir, fallback, install, mobile |
-| Resiliência | 7 | Arquivos inválidos, UTF-8, conexão lenta, console |
-| **Total** | **32** | — |
-
-### 4.2 Casos críticos para decisão Go/No-Go
-
-- INF-01 Health API
-- INF-03 Header Sistema Online
-- API-01 / API-02 Process
-- UI-02 Upload · UI-03 Visualizar · UI-04 Ouvir
-- UI-07 PWA Install
-
-**Critério Go:** ≥ 90% dos casos críticos = Pass + nenhum bloqueante de infra/API/UI principal.  
-**Critério No-Go:** Health/Process intermitente, Header offline persistente, Upload não chega na API, PWA quebrada.
-
-### 4.3 Status da execução
-
-| Campo | Valor |
-|-------|-------|
-| Data de início | 13/08/2026 |
-| Executor | A preencher |
-| Resultado | 📋 Pendente de execução |
-| Decisão | A definir após preenchimento da planilha |
-
-> Após a execução: atualizar esta seção com Pass/Fail, evidências e decisão formal (Go para Fase 3 / Corrigir antes / Pausar).
+**Critério Go Ordem 1:** health + header + secrets + LICENSE + escopo Fase 2 congelado → **atingido**.
 
 ## 5. Fase 3 / 4 (futuro)
 
 **Fase 3:** OCR real (Tesseract / cloud) · ASR Whisper · Vision caption · TTS multilíngue  
-**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge completo · mais formatos (DOCX, vídeo, IoT…)
+**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge · mais formatos
 
-## 6. URLs de produção
+## 6. URLs de produção (canônicas)
 
 | Serviço | URL |
 |---------|-----|
 | Frontend | https://neuro-leitor.vercel.app |
-| API | https://neuro-leitor-copy-production.up.railway.app |
-| Health | https://neuro-leitor-copy-production.up.railway.app/api/health |
+| API | https://neuro-leitor.onrender.com |
+| Health | https://neuro-leitor.onrender.com/api/health |
+
+> URLs Railway antigas estão **obsoletas** e não devem ser usadas.
 
 ---
 
-**Resumo:** Fase 2 fechada de ponta a ponta (infra + UI). Plano de validação E2E de produção criado em 13/08/2026. Próximo passo: executar a planilha de tracking e decidir início da Fase 3.
+**Resumo:** Ordem 1 FECHADA (13 out 2026). API em Render; frontend Vercel alinhado. Próximo na sequência de governança: **Sublima Decryptor (Ordem 2)**.
 
 © 2026 Producer DCS® / DcsProducer® Creative Studio
