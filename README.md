@@ -5,8 +5,8 @@
 [![version](https://img.shields.io/badge/version-0.6.2-cyan?style=flat-square)](https://github.com/producerdcs-cpu/neuro-leitor)
 [![phase](https://img.shields.io/badge/phase-2%20backend%20done-green?style=flat-square)](#estado-atual)
 [![PWA](https://img.shields.io/badge/PWA-ready-green?style=flat-square)](https://neuro-leitor.vercel.app)
-[![API](https://img.shields.io/badge/API-Railway%20online-green?style=flat-square)](https://neuro-leitor-copy-production.up.railway.app/api/health)
-[![DcsProducer®](https://img.shields.io/badge/DcsProducer®-Portfolio-gold?style=flat-square)](https://dcsproducer-hub.vercel.app/)
+[![API](https://img.shields.io/badge/API-Render%20online-green?style=flat-square)](https://neuro-leitor.onrender.com/api/health)
+[![DcsProducer®](https://img.shields.io/badge/DcsProducer%C2%AE-Portfolio-gold?style=flat-square)](https://dcsproducer-hub.vercel.app/)
 
 ![NeuroLeitor](./public/hero-neural.webp)
 
@@ -20,10 +20,13 @@
 | | |
 |---|---|
 | **Live (frontend)** | [neuro-leitor.vercel.app](https://neuro-leitor.vercel.app) |
-| **API** | [Railway production](https://neuro-leitor-copy-production.up.railway.app) |
-| **Health** | [GET /api/health](https://neuro-leitor-copy-production.up.railway.app/api/health) |
+| **API** | [Render production](https://neuro-leitor.onrender.com) |
+| **Health** | [GET /api/health](https://neuro-leitor.onrender.com/api/health) |
 | **Projects Hub** | [dcsproducer-hub.vercel.app](https://dcsproducer-hub.vercel.app/) |
 | **Portfólio executivo** | [core-hub-aegis.vercel.app](https://core-hub-aegis.vercel.app/) |
+
+> **Status canônico:** [CHECKLIST.md](./CHECKLIST.md) (Ordem 1 fechada 13/10/2026).  
+> Railway é legado (trial expirado) e não deve ser usado.
 
 Deploy passo a passo: [docs/DEPLOY.md](./docs/DEPLOY.md) · Checklist: [CHECKLIST.md](./CHECKLIST.md) · Arquitetura: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
 
@@ -31,7 +34,7 @@ Deploy passo a passo: [docs/DEPLOY.md](./docs/DEPLOY.md) · Checklist: [CHECKLIS
 
 ## O que é
 
-PWA + API para leitura multimodal de documentos e mídia, com pipeline de reconhecimento e correção. Stack: **React · Vite · Tailwind · Framer Motion** (frontend) e **Node** (API na Railway).
+PWA + API para leitura multimodal de documentos e mídia, com pipeline de reconhecimento e correção. Stack: **React · Vite · Tailwind · Framer Motion** (frontend) e **Node** (API no **Render**).
 
 | Capacidade | Status |
 |------------|--------|
@@ -50,19 +53,20 @@ PWA + API para leitura multimodal de documentos e mídia, com pipeline de reconh
 |------|--------|
 | **Frontend + PWA** | ✅ Online (Vercel) · instalável |
 | **Fase 1 — MVP** | ✅ Concluído |
-| **Fase 2 — Backend** | ✅ Concluído (Railway + `VITE_API_URL` + Visualizar/Ouvir) |
+| **Fase 2 — Backend** | ✅ Concluído (Render + `VITE_API_URL` + Visualizar/Ouvir) |
+| **Ordem 1 (governança)** | ✅ Fechada 13/10/2026 |
 | **Fase 3 / 4** | 📋 Planejado (OCR real, Whisper, Vision, auth) |
 
 ---
 
 ## Deploy em produção (resumo)
 
-### Railway (API)
+### Render (API — canônica)
 
 | Item | Valor |
 |------|--------|
 | Root Directory | `server` |
-| Domain | `https://neuro-leitor-copy-production.up.railway.app` |
+| Domain | `https://neuro-leitor.onrender.com` |
 | Variáveis | `PORT`, `HOST`, `NODE_ENV`, `CORS_ORIGIN`, `OCR_PROVIDER=local`, `ASR_PROVIDER=local`, `CORRECTION_PROVIDER=local` |
 
 ### Vercel (Frontend)
@@ -70,8 +74,10 @@ PWA + API para leitura multimodal de documentos e mídia, com pipeline de reconh
 | Item | Valor |
 |------|--------|
 | URL | `https://neuro-leitor.vercel.app` |
-| Env | `VITE_API_URL=https://neuro-leitor-copy-production.up.railway.app` |
+| Env | `VITE_API_URL=https://neuro-leitor.onrender.com` |
 | Após mudar env | Redeploy **sem** cache de build |
+
+> Railway (`*.up.railway.app`) é **legado** (trial expirado). Não usar.
 
 Detalhes: [docs/DEPLOY.md](./docs/DEPLOY.md).
 
@@ -111,16 +117,16 @@ npm run dev
 # → http://localhost:5173
 ```
 
-Opcional: `.env` com `VITE_API_URL=http://localhost:3001` ou a URL do Railway.
+Opcional: `.env` com `VITE_API_URL=http://localhost:3001` ou a URL do Render.
 
 ---
 
 ## API (produção)
 
 ```bash
-curl https://neuro-leitor-copy-production.up.railway.app/api/health
-curl -F "file=@doc.png" https://neuro-leitor-copy-production.up.railway.app/api/process
-curl -X POST https://neuro-leitor-copy-production.up.railway.app/api/correct \
+curl https://neuro-leitor.onrender.com/api/health
+curl -F "file=@doc.png" https://neuro-leitor.onrender.com/api/process
+curl -X POST https://neuro-leitor.onrender.com/api/correct \
   -H "Content-Type: application/json" \
   -d '{"text":"reconehcimento multimod@l"}'
 ```
@@ -162,7 +168,7 @@ CHECKLIST.md
 
 Este repositório é o **primeiro lançamento público** da sequência definida em `Lista_Projetos.xlsx` (ordem 1), após fechamento da ordem 0 (skill `pdf-wordpress-editor` + [Projects Hub](https://dcsproducer-hub.vercel.app/)).
 
-- Código de produto e demos sanitizadas: este repo + live Vercel/Railway.
+- Código de produto e demos sanitizadas: este repo + live Vercel/Render.
 - Governança e planilha: Hub privado + skill.
 - Segurança / AEGIS: pointer público apenas em [`aegis-dcs`](https://github.com/producerdcs-cpu/aegis-dcs) (sem motor).
 
