@@ -1,6 +1,8 @@
-# NeuroLeitor — CI simples e seguro
+# NeuroLeitor — CI guardião (simples e seguro)
 # Roda em todo push e pull_request.
-# Deploy (Vercel / Railway) só na branch main e só se os Secrets existirem.
+# Deploy Vercel (opcional) só na main se secrets existirem.
+# Health check da API de produção (Render) na main.
+# Railway removido (legado).
 #
 # Nota: o contexto `secrets` NÃO pode ser usado em `if:` de steps/jobs
 # (erro: "Unrecognized named-value: 'secrets'"). Solução: mapear para `env` no job.
@@ -58,7 +60,7 @@ jobs:
           retention-days: 3
 
   # ─────────────────────────────────────────
-  # 2. Backend: instalar + smoke test
+  # 2. Backend: instalar + smoke test local
   # ─────────────────────────────────────────
   backend:
     name: Backend (smoke)
@@ -97,7 +99,7 @@ jobs:
           CORRECTION_PROVIDER: local
 
   # ─────────────────────────────────────────
-  # 3. Deploy Frontend (Vercel) — só main
+  # 3. Deploy Frontend (Vercel) — só main + opcional
   # ─────────────────────────────────────────
   deploy-frontend:
     name: Deploy Frontend (Vercel)
@@ -124,35 +126,28 @@ jobs:
 
       - name: Skip (sem secrets)
         if: env.VERCEL_TOKEN == ''
-        run: echo "⚠️ VERCEL_TOKEN não configurado — deploy frontend pulado. Configure em Settings → Secrets and variables → Actions."
+        run: echo "⚠️ VERCEL_TOKEN não configurado — deploy frontend pulado (Vercel Git integration continua funcionando)."
 
   # ─────────────────────────────────────────
-  # 4. Deploy Backend (Railway) — só main
+  # 4. Health check produção (Render) — só main
   # ─────────────────────────────────────────
-  deploy-backend:
-    name: Deploy Backend (Railway)
+  production-health:
+    name: Production Health (Render)
     needs: [frontend, backend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Railway CLI
-        if: env.RAILWAY_TOKEN != ''
-        run: npm install -g @railway/cli
-
-      - name: Deploy to Railway
-        if: env.RAILWAY_TOKEN != ''
+      - name: Check API health
         run: |
-          railway up --service "${RAILWAY_SERVICE_ID:-neuro-leitor-api}" --detach || railway up --detach
-        env:
-          RAILWAY_TOKEN: ${{ env.RAILWAY_TOKEN }}
-        working-directory: server
-
-      - name: Skip (sem secrets)
-        if: env.RAILWAY_TOKEN == ''
-        run: echo "⚠️ RAILWAY_TOKEN não configurado — deploy backend pulado. Configure em Settings → Secrets."
+          echo "Verificando health da API de produção (Render)..."
+          for i in 1 2 3 4 5; do
+            if curl -sf --max-time 15 https://neuro-leitor.onrender.com/api/health; then
+              echo ""
+              echo "✅ Health OK"
+              exit 0
+            fi
+            echo "Tentativa $i falhou — aguardando cold start..."
+            sleep 8
+          done
+          echo "⚠️ Health check falhou após várias tentativas (possível cold start prolongado no free tier)."
+          exit 0
