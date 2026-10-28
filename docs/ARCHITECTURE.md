@@ -2,7 +2,7 @@
 
 **NeuroLeitor BioData Reader v0.6.2**  
 Tela: `Arquitetura` (`src/components/ArchitecturePanel.tsx`)  
-Atualizado: 2026-08-01 · **Fase 2 concluída**
+Atualizado: 2026-10-28 · **Fase 2 concluída · Fase 3 aberta**
 
 ---
 
@@ -25,7 +25,7 @@ Fonte de verdade visual do progresso. Dados em `ArchitecturePanel.tsx` (offline/
 |---|---------|-----------|------|--------|---------------|
 | 1 | **Ingestão** | Upload PDF / Imagem / Áudio / Texto | File API · Drag & Drop | ✅ done | `MultimodalReader` + `POST /api/process` |
 | 2 | **Layout Analysis** | Regiões, tabelas, figuras | YOLOv8-like · Document AI | ✅ done (mock) | Placeholder; futuro Document AI |
-| 3 | **OCR / ASR** | Extração e transcrição | Tesseract · Whisper | ✅ done (local) | `server/services/ocr.js`, `asr.js` — reais na Fase 3 |
+| 3 | **OCR / ASR** | Extração e transcrição | Tesseract · Whisper | 🟡 wip | `server/services/ocr.js`, `asr.js` — **Fase 3 iniciada** |
 | 4 | **Vision Caption** | Descrição de imagens | BLIP-2 / CLIP | 🟡 wip | `server/services/vision.js` (stub) |
 | 5 | **NLP & Correção** | Ortografia e contexto | Transformer · Spellcheck | ✅ done | `server/services/correction.js` |
 | 6 | **Fusion Bioneural** | Multimodal + embeddings | Cross-Attention | 🟡 wip | UI (`BioneuralEngine`) |
@@ -36,7 +36,7 @@ Fonte de verdade visual do progresso. Dados em `ArchitecturePanel.tsx` (offline/
 ```
 Cliente (MultimodalReader)
   → FormData + X-Session-Id
-  → POST /api/process  (Railway produção)
+  → POST /api/process  (Render produção)
   → pipeline.js (detectType → OCR|ASR|text → correction)
   → sessão (store/sessions.js)
   → JSON { text, correctedText, corrections, meta }
@@ -65,16 +65,16 @@ Arquivos principais:
 
 | Camada | Status | Local |
 |--------|--------|-------|
-| API Gateway (Express / Node) | ✅ Railway | `server/index.js` + `routes/api.js` |
-| OCR Service | ✅ local (mock) | `server/services/ocr.js` |
-| ASR Service | ✅ local (mock) | `server/services/asr.js` |
+| API Gateway (Express / Node) | ✅ Render | `server/index.js` + `routes/api.js` |
+| OCR Service | 🟡 local → real (Fase 3) | `server/services/ocr.js` |
+| ASR Service | 🟡 local → real (Fase 3) | `server/services/asr.js` |
 | LLM Correction | ✅ | `server/services/correction.js` |
 | Vector Store | 📋 | — |
 | TTS | ✅ cliente | `src/lib/tts.ts` |
 
 **Produção**
-- API: `https://neuro-leitor-copy-production.up.railway.app`
-- Health: `GET /api/health` → `phase: 2`, `env: production`
+- API: `https://neuro-leitor.onrender.com`
+- Health: `GET /api/health`
 - Frontend: `VITE_API_URL` no Vercel
 
 ---
@@ -84,14 +84,14 @@ Arquivos principais:
 ### Fase 1 — MVP ✅ Concluído
 UI Dashboard, upload multimodal, motor bioneural, correção mock.
 
-### Fase 2 — Backend ✅ Concluído (2026-08-01)
-- API online (Railway) + health
+### Fase 2 — Backend ✅ Concluído
+- API online (Render) + health
 - Frontend ligado (`VITE_API_URL`)
 - Upload → process → Visualizar / Ouvir
 - Sessões + providers locais
 
-### Fase 3 — Avançado 📋 Planejado
-- OCR real (Tesseract / cloud)
+### Fase 3 — Avançado 🟡 Em andamento (aberta 28/10/2026)
+- OCR real (Tesseract / cloud) ← **primeiro item em foco**
 - ASR Whisper real
 - Vision captioning
 - TTS multilíngue aprimorado
@@ -119,7 +119,7 @@ status: "done" | "wip" | "planned"
 
 ## 8. Deploy
 
-Ver **[docs/DEPLOY.md](./DEPLOY.md)** (Railway + Vercel já aplicados).
+Ver **[docs/DEPLOY.md](./DEPLOY.md)** (Render + Vercel já aplicados).
 
 ---
 
