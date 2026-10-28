@@ -55,10 +55,21 @@
 
 **Primeiro item em foco:** OCR real
 
-- [ ] OCR real (Tesseract.js no frontend **ou** serviço OCR na API)
-- [ ] Extração de texto de PDF/imagens
-- [ ] Tratamento de português
-- [ ] Tela / fluxo de resultado OCR integrado
+### Caminho atual do OCR (já no código)
+
+| Camada | Status | Detalhe |
+|--------|--------|--------|
+| Backend `server/services/ocr.js` | ✅ Existe | Tenta `tesseract.js` (por+eng) → fallback `local-mock` → opcional OpenAI |
+| Dependência | optional | `tesseract.js` em `server/package.json` (optionalDependencies) |
+| Env | `OCR_PROVIDER=local` (padrão) | ou `openai` com `OPENAI_API_KEY` |
+| UI | ✅ Atualizado 28/10 | MultimodalReader mostra badge do provider (`tesseract` / `local-mock` / `openai`) + confiança |
+
+### Checklist Fase 3
+
+- [x] Feedback visual do provider OCR na UI (badge + confiança)
+- [ ] Garantir Tesseract estável no Render (ou ativar provider cloud)
+- [ ] Extração robusta de PDF (além de imagens)
+- [ ] Tratamento de português validado em produção
 - [ ] ASR Whisper real
 - [ ] Vision Caption
 - [ ] TTS multilíngue aprimorado
@@ -80,7 +91,7 @@ Fine-tuning · analytics · multi-user/auth · edge · mais formatos (DOCX, XLSX
 
 ---
 
-**Resumo:** Ordem 1 FECHADA · Fase 2 fechada · **Fase 3 aberta** (OCR real como primeiro item).  
+**Resumo:** Ordem 1 FECHADA · Fase 2 fechada · **Fase 3 aberta** (OCR real como primeiro item · UI já mostra provider).  
 Próximo na sequência de governança: continuar Fase 3 e, em paralelo de produto, **Sublima Decryptor (Ordem 2)**.
 
 © 2026 Producer DCS® / DcsProducer® Creative Studio
