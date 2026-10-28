@@ -1,6 +1,6 @@
 # ✅ Checklist Geral — NeuroLeitor BioData Reader v0.6.2
 
-> Atualizado **2026-10-13** · **Ordem 1 (Gate) FECHADA** · API migrada Railway → **Render**
+> Atualizado **2026-10-28** · **Ordem 1 (Gate) FECHADA** · **Fase 3 aberta** · API canônica = **Render**
 
 ## 1. Estado atual
 
@@ -10,7 +10,8 @@
 | **Fase 1 — MVP** | ✅ Concluído | Dashboard, abas, motor bioneural, mocks |
 | **Fase 2 — Backend** | ✅ Concluído | **Render** online + Vercel `VITE_API_URL` + Visualizar/Ouvir |
 | **Ordem 1 (governança)** | ✅ **FECHADA 13 out 2026** | Secrets limpo · health 200 · Sistema Online · LICENSE MIT · escopo congelado |
-| **Fase 3 / 4** | 📋 Planejado | OCR real, Whisper, Vision, TTS multi, auth |
+| **Fase 3 — Avançado** | 🟡 **Aberta 28/10/2026** | OCR real (primeiro item) · Whisper · Vision · TTS multi |
+| **Fase 4** | 📋 Planejado | Fine-tuning, analytics, auth, edge, mais formatos |
 | **Vercel** | ✅ Frontend online | Sistema Online (verde) |
 | **Render (API)** | ✅ API online | https://neuro-leitor.onrender.com |
 | **Railway** | ⛔ Legado | Trial expired — offline; pode deletar |
@@ -50,12 +51,24 @@
 
 **Critério Go Ordem 1:** health + header + secrets + LICENSE + escopo Fase 2 congelado → **atingido**.
 
-## 5. Fase 3 / 4 (futuro)
+## 5. Fase 3 — Avançado (aberta 28/10/2026)
 
-**Fase 3:** OCR real (Tesseract / cloud) · ASR Whisper · Vision caption · TTS multilíngue  
-**Fase 4:** Fine-tuning · analytics · multi-user/auth · edge · mais formatos
+**Primeiro item em foco:** OCR real
 
-## 6. URLs de produção (canônicas)
+- [ ] OCR real (Tesseract.js no frontend **ou** serviço OCR na API)
+- [ ] Extração de texto de PDF/imagens
+- [ ] Tratamento de português
+- [ ] Tela / fluxo de resultado OCR integrado
+- [ ] ASR Whisper real
+- [ ] Vision Caption
+- [ ] TTS multilíngue aprimorado
+- [ ] Interface integrada + testes E2E + deploy
+
+## 6. Fase 4 (futuro)
+
+Fine-tuning · analytics · multi-user/auth · edge · mais formatos (DOCX, XLSX, EPUB…)
+
+## 7. URLs de produção (canônicas)
 
 | Serviço | URL |
 |---------|-----|
@@ -67,6 +80,7 @@
 
 ---
 
-**Resumo:** Ordem 1 FECHADA (13 out 2026). API em Render; frontend Vercel alinhado. Próximo na sequência de governança: **Sublima Decryptor (Ordem 2)**.
+**Resumo:** Ordem 1 FECHADA · Fase 2 fechada · **Fase 3 aberta** (OCR real como primeiro item).  
+Próximo na sequência de governança: continuar Fase 3 e, em paralelo de produto, **Sublima Decryptor (Ordem 2)**.
 
 © 2026 Producer DCS® / DcsProducer® Creative Studio
