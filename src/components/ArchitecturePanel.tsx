@@ -31,7 +31,7 @@ const pipeline = [
     title: "OCR / ASR",
     desc: "Extração de texto e transcrição",
     tech: "Tesseract · Whisper",
-    status: "done" as const,
+    status: "wip" as const, // Fase 3 iniciada — OCR real em andamento
   },
   {
     id: "vision",
@@ -77,7 +77,7 @@ const roadmap = [
   {
     phase: "Fase 2 — Backend",
     items: [
-      "API online (Railway) + health",
+      "API online (Render) + health",
       "Frontend ligado (VITE_API_URL)",
       "Upload → process → Visualizar / Ouvir",
       "Sessões + providers locais",
@@ -92,7 +92,7 @@ const roadmap = [
       "Vision captioning",
       "TTS multilíngue aprimorado",
     ],
-    status: "planned" as const,
+    status: "wip" as const, // Oficialmente aberta
   },
   {
     phase: "Fase 4 — Escala",
@@ -126,7 +126,7 @@ export default function ArchitecturePanel() {
           Arquitetura & Roadmap
         </h2>
         <p className="text-sm text-zinc-400 mt-1">
-          Pipeline multimodal, componentes e plano de evolução · v0.6.2
+          Pipeline multimodal, componentes e plano de evolução · v0.6.2 · Fase 3 aberta
         </p>
       </div>
 
