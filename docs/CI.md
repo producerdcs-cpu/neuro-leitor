@@ -2,8 +2,10 @@
 
 Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
-**Status atual (27/10/2026):** CI atua como **guardião** (typecheck + build + smoke health).  
+**Status atual (28/10/2026):** CI atua como **guardião** (typecheck + build + smoke health).  
 Deploys de produção são feitos principalmente pelos próprios provedores (Vercel e Render via Git).
+
+> **Nota AEGIS:** Deploy Frontend via GitHub Actions é **opcional**. A produção canônica do frontend é o **Vercel Git Integration**. O job vermelho no Actions (sem secrets `VERCEL_*`) não bloqueia o site — é cosmético em relação ao Gate.
 
 ---
 
@@ -32,7 +34,7 @@ Crie **apenas** o que for usar. Nunca coloque tokens no código ou no `.yml`.
 | `VERCEL_ORG_ID` | Project → Settings → General |
 | `VERCEL_PROJECT_ID` | Idem |
 
-> Sem esses secrets o CI continua fazendo **build/typecheck**. Só o job de deploy é pulado.
+> Sem esses secrets o CI continua fazendo **build/typecheck**. Só o job de deploy é pulado (ou falha de forma não crítica).
 
 ### Backend
 
