@@ -38,10 +38,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          # Sem package-lock.json no repo → não usar cache: npm (exige lockfile)
+          # cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Typecheck
         run: npx tsc --noEmit
