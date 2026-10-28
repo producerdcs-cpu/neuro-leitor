@@ -34,6 +34,9 @@ interface UploadedFile {
   result?: string;
   fullText?: string;
   source?: "api" | "mock";
+  /** Provider real retornado pela API (tesseract, local-mock, openai, etc.) */
+  provider?: string;
+  confidence?: number;
   errorMsg?: string;
   /** Arquivo original para reenvio à API */
   rawFile?: File;
@@ -64,6 +67,18 @@ const mockResults: Record<FileType, string> = {
   text: "Texto analisado. 1.204 tokens. Sentimento: neutro-positivo. Entidades: Neuro Leitor, Bioneural, Multimodal. Resumo gerado com sucesso.",
   unknown: "Arquivo processado com pipeline genérico.",
 };
+
+function extractProvider(meta: Record<string, unknown> | undefined): {
+  provider?: string;
+  confidence?: number;
+} {
+  if (!meta) return {};
+  const ocr = meta.ocr as { provider?: string; confidence?: number } | undefined;
+  const asr = meta.asr as { provider?: string; confidence?: number } | undefined;
+  if (ocr?.provider) return { provider: ocr.provider, confidence: ocr.confidence };
+  if (asr?.provider) return { provider: asr.provider, confidence: asr.confidence };
+  return {};
+}
 
 export default function MultimodalReader() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -104,6 +119,8 @@ export default function MultimodalReader() {
         data.text ||
         (typeof data.job?.result === "string" ? data.job.result : summary);
 
+      const { provider, confidence } = extractProvider(data.meta);
+
       setFiles((prev) =>
         prev.map((f) =>
           f.id === uploaded.id
@@ -114,6 +131,8 @@ export default function MultimodalReader() {
                 result: summary,
                 fullText: full,
                 source: "api",
+                provider,
+                confidence,
               }
             : f
         )
@@ -139,6 +158,7 @@ export default function MultimodalReader() {
                 result: mock,
                 fullText: mock,
                 source: "mock",
+                provider: "mock",
               }
             : f
         )
@@ -312,6 +332,13 @@ export default function MultimodalReader() {
                     {file.source === "mock" && (
                       <span className="ml-2 text-amber-500">· mock</span>
                     )}
+                    {file.provider && file.provider !== "mock" && (
+                      <span className="ml-2 text-cyan-400">
+                        · {file.provider}
+                        {typeof file.confidence === "number" &&
+                          ` ${(file.confidence * 100).toFixed(0)}%`}
+                      </span>
+                    )}
                   </p>
 
                   {file.status === "processing" && (
@@ -329,6 +356,11 @@ export default function MultimodalReader() {
                       <div className="flex items-center gap-2 text-xs text-green-400 mb-2">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Processamento concluído
+                        {file.provider && file.provider !== "mock" && (
+                          <Badge variant="outline" className="text-[10px] ml-1 border-cyan-500/40 text-cyan-300">
+                            {file.provider}
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-sm text-zinc-300 leading-relaxed">
                         {file.result}
@@ -379,6 +411,11 @@ export default function MultimodalReader() {
                             <div className="mt-3 max-h-64 overflow-y-auto rounded-md bg-zinc-950/80 border border-zinc-700/50 p-3">
                               <p className="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wide">
                                 Conteúdo extraído
+                                {file.provider && (
+                                  <span className="ml-2 normal-case text-cyan-600">
+                                    via {file.provider}
+                                  </span>
+                                )}
                               </p>
                               <pre className="text-sm text-zinc-200 whitespace-pre-wrap break-words font-sans leading-relaxed">
                                 {displayText}
